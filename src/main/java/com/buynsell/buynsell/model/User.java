@@ -50,19 +50,13 @@ public class User extends DateAudit {
     @NotNull
     private boolean isActive;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
     public User() {
 
     }
 
     public User(String name, String username, String email, String password) {
         this.name = name;
-        this.username = username;
+        this.username = username.toLowerCase();
         this.email = email;
         this.password = password;
     }
@@ -72,7 +66,7 @@ public class User extends DateAudit {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username.toLowerCase();
     }
 
     public Long getId() {
@@ -92,7 +86,7 @@ public class User extends DateAudit {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.toLowerCase();
     }
 
     public String getPassword() {
@@ -109,13 +103,5 @@ public class User extends DateAudit {
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 }

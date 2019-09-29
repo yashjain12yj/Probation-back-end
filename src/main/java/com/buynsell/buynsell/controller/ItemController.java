@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class ItemController {
 
-
     @Autowired
     ItemRepository itemRepository;
 

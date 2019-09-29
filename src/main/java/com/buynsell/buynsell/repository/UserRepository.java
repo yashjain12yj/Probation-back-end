@@ -19,22 +19,10 @@ import java.util.Optional;
 public class UserRepository {
     @PersistenceContext
     EntityManager em;
-/*
-    Optional<User> findByEmail(String email);
-
-    Optional<User> findByUsernameOrEmail(String username, String email);
-
-    List<User> findByIdIn(List<Long> userIds);
-
-    Optional<User> findByUsername(String username);
-
-    Boolean existsByUsername(String username);
-
-    Boolean existsByEmail(String email);*/
 
     @Transactional
     public User save(User user) {
-        if (em.find(User.class, user.getId()) == null) {
+        if (!existsByEmail(user.getEmail())) {
             em.persist(user);
             return user;
         } else {
@@ -42,13 +30,13 @@ public class UserRepository {
         }
     }
 
-
     @Transactional
     public Optional<User> findByUsernameOrEmail(String username, String email) {
         Query query = em.createQuery("SELECT u FROM User u WHERE u.username = :username or u.email = :email");
-        query.setParameter("username", username);
-        query.setParameter("email",email);
+        query.setParameter("username", username.toLowerCase());
+        query.setParameter("email",email.toLowerCase());
         List<User> resultList = query.getResultList();
+        System.out.println(resultList);
         if (resultList.size() == 0)
             return Optional.empty();
         return Optional.of(resultList.get(0));
@@ -75,7 +63,7 @@ public class UserRepository {
     @Transactional
     public Optional<User> findByEmail(String email) {
         Query query = em.createQuery("SELECT u FROM User u WHERE u.email = :email");
-        query.setParameter("email", email);
+        query.setParameter("email", email.toLowerCase());
         List<User> resultList = query.getResultList();
         if (resultList.size() == 0)
             return Optional.empty();
@@ -85,7 +73,7 @@ public class UserRepository {
     @Transactional
     public Optional<User> findByUsername(String username) {
         Query query = em.createQuery("SELECT u FROM User u WHERE u.username = :username");
-        query.setParameter("username", username);
+        query.setParameter("username", username.toLowerCase());
         List<User> resultList = query.getResultList();
         if (resultList.size() == 0)
             return Optional.empty();
@@ -95,14 +83,14 @@ public class UserRepository {
     @Transactional
     public Boolean existsByUsername(String username) {
         Query query = em.createQuery("SELECT u FROM User u WHERE u.username = :username");
-        query.setParameter("username", username);
+        query.setParameter("username", username.toLowerCase());
         return query.getResultList().size() == 1;
     }
 
     @Transactional
     public Boolean existsByEmail(String email) {
         Query query = em.createQuery("SELECT u FROM User u WHERE u.email = :email");
-        query.setParameter("email", email);
+        query.setParameter("email", email.toLowerCase());
         return query.getResultList().size() == 1;
     }
 }

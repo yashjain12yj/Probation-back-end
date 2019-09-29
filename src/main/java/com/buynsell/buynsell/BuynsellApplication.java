@@ -12,10 +12,7 @@ import javax.persistence.EntityListeners;
 import java.util.TimeZone;
 
 @SpringBootApplication
-@EntityScan(basePackageClasses = {
-        BuynsellApplication.class,
-        Jsr310JpaConverters.class
-})
+@EnableJpaAuditing
 public class BuynsellApplication {
     @PostConstruct
     void init() {
@@ -25,5 +22,4 @@ public class BuynsellApplication {
     public static void main(String[] args) {
         SpringApplication.run(BuynsellApplication.class, args);
     }
-
 }
