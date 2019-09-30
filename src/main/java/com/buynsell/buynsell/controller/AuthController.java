@@ -21,7 +21,6 @@ public class AuthController {
     @Autowired
     UserRepository userRepository;
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         System.out.println(loginRequest);
@@ -34,7 +33,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Invalid username or password");
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
