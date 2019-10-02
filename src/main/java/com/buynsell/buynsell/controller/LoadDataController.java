@@ -3,15 +3,17 @@ package com.buynsell.buynsell.controller;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/load")
 public class LoadDataController {
     @Autowired
     UserRepository userRepository;
 
-    @RequestMapping({ "/load" })
+    @GetMapping("/")
     public String loadData() {
 
         // Create User
@@ -25,6 +27,6 @@ public class LoadDataController {
 
         userRepository.save(user);
 
-        return "Data Loaded";
+        return "Data Loaded -> " + user.toString();
     }
 }

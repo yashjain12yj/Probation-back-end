@@ -2,6 +2,7 @@ package com.buynsell.buynsell.controller;
 
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.ApiResponse;
+import com.buynsell.buynsell.payload.JwtAuthenticationResponse;
 import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
 import com.buynsell.buynsell.repository.UserRepository;
@@ -16,48 +17,48 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
     @Autowired
     UserRepository userRepository;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        System.out.println(loginRequest);
+        System.out.println("Hit -> /signin");
         Optional<User> user = userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail());
+        if (!user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Invalid username or password");
+        }
+        if (user.get().getPassword().equals(loginRequest.getPassword())){
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse("123456");
+            return ResponseEntity.status(HttpStatus.OK).body(jwtAuthenticationResponse);
+        }
+        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Invalid username or password");
 
-        if (!user.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Invalid username or password");
-        if (user.get().getPassword().equals(loginRequest.getPassword()))
-            return ResponseEntity.status(HttpStatus.OK).body("Valid Info");
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Invalid username or password");
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+        System.out.println("Hit -> /signup");
+        ApiResponse apiResponse;
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.NO_CONTENT);
+            System.out.println("User is already taken");
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new ApiResponse(false, "User is already taken!"));
         }
-
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
-                    HttpStatus.NO_CONTENT);
+        if (userRepository.existsByEmail(signUpRequest.getEmail())){
+            System.out.println("Email Address already in use");
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new ApiResponse(true, "Email Address already in use!"));
         }
 
         // Creating user's account
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
                 signUpRequest.getEmail(), signUpRequest.getPassword());
-
         user.setActive(true);
-
         // encrypt password before saving
         user.setPassword(user.getPassword());
 
-
         // call service
         User result = userRepository.save(user);
-
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "User registered successfully"));
     }
 }
