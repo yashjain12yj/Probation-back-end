@@ -1,5 +1,6 @@
 package com.buynsell.buynsell.controller;
 
+import com.buynsell.buynsell.encryption.AESEncryption;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.ApiResponse;
 import com.buynsell.buynsell.payload.JwtAuthenticationResponse;
@@ -7,6 +8,7 @@ import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
 import com.buynsell.buynsell.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +24,19 @@ public class AuthController {
     @Autowired
     UserRepository userRepository;
 
+    @Value("${secretKey}")
+    private String secretKey;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         System.out.println("Hit -> /signin");
+        loginRequest.setPassword(AESEncryption.encrypt(loginRequest.getPassword(),secretKey));
         Optional<User> user = userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail());
         if (!user.isPresent()) {
-            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
         if (user.get().getPassword().equals(loginRequest.getPassword())){
-            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse("123456");
-            return ResponseEntity.status(HttpStatus.OK).body(jwtAuthenticationResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtAuthenticationResponse("123456"));
         }
         return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Invalid username or password");
 
@@ -55,7 +60,8 @@ public class AuthController {
                 signUpRequest.getEmail(), signUpRequest.getPassword());
         user.setActive(true);
         // encrypt password before saving
-        user.setPassword(user.getPassword());
+
+        user.setPassword(AESEncryption.encrypt(user.getPassword(), secretKey));
 
         // call service
         User result = userRepository.save(user);

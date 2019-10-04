@@ -1,8 +1,10 @@
 package com.buynsell.buynsell.controller;
 
+import com.buynsell.buynsell.encryption.AESEncryption;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoadDataController {
     @Autowired
     UserRepository userRepository;
+
+    @Value("${secretKey}")
+    private String secretKey;
 
     @GetMapping("/")
     public String loadData() {
@@ -23,7 +28,7 @@ public class LoadDataController {
         user.setActive(true);
         user.setEmail("yashjain12yj@gmail.com");
         user.setUsername("yashjain12yj");
-        user.setPassword("jainyash");
+        user.setPassword(AESEncryption.encrypt("yashjain", secretKey));
 
         userRepository.save(user);
 
