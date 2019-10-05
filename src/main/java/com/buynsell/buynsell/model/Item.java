@@ -9,12 +9,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ITEM")
 @EntityListeners(AuditingEntityListener.class)
 public class Item extends DateAudit {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -30,8 +31,40 @@ public class Item extends DateAudit {
     @NotNull(message = "Please enter price")
     private double price;
 
+    @NotNull(message = "Please give availability")
+    private boolean isAvailable;
+
+    @NotBlank
+    private String contactName;
+
+    @NotBlank
+    private String contactEmail;
+
+    private String category;
+
+    @ManyToOne
+    User user;
+
+    @OneToMany
+    Set<Image> images;
+
     @NotNull(message = "Please provide active status")
     private boolean active;
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void addImage(Image image) {
+        if (images == null)
+            images = new HashSet<>();
+        images.add(image);
+    }
+
+    public void removeImage(Image image) {
+        if (images.contains(image))
+            images.remove(image);
+    }
 
     public long getId() {
         return id;
@@ -67,6 +100,46 @@ public class Item extends DateAudit {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

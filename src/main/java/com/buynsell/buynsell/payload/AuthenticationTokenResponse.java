@@ -1,10 +1,10 @@
 package com.buynsell.buynsell.payload;
 
-public class JwtAuthenticationResponse {
+public class AuthenticationTokenResponse {
     private String accessToken;
     private String tokenType = "Bearer";
 
-    public JwtAuthenticationResponse(String accessToken) {
+    public AuthenticationTokenResponse(String accessToken) {
         this.accessToken = accessToken;
     }
 

@@ -36,7 +36,6 @@ public class UserRepository {
         query.setParameter("username", username.toLowerCase());
         query.setParameter("email",email.toLowerCase());
         List<User> resultList = query.getResultList();
-        System.out.println(resultList);
         if (resultList.size() == 0)
             return Optional.empty();
         return Optional.of(resultList.get(0));

@@ -26,7 +26,6 @@ public class AESEncryption {
      * @return the encrypted string
      */
     public static String encrypt(String text, String secretKey) {
-        System.out.println(text + secretKey);
         Key key = new SecretKeySpec(secretKey.getBytes(), ALGO);
         Cipher c = null;
         try {

@@ -1,8 +1,6 @@
 package com.buynsell.buynsell.repository;
 
 
-
-
 import com.buynsell.buynsell.model.Item;
 import org.springframework.stereotype.Repository;
 
@@ -19,14 +17,14 @@ public class ItemRepository {
     @PersistenceContext
     EntityManager entityManager;
 
-    public Item insert(Item item){
+    public Item insert(Item item) {
         entityManager.persist(item);
         return item;
     }
 
-    public List<Item> findAll(){
+    public List<Item> findAll() {
         // find all items and return in a list
-        Item item = entityManager.find(Item.class,(long)1);
+        Item item = entityManager.find(Item.class, (long) 1);
         ArrayList<Item> items = new ArrayList<>();
         items.add(item);
         return items;

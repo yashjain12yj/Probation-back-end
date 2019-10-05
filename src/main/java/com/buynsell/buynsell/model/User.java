@@ -50,9 +50,10 @@ public class User extends DateAudit {
     @NotNull
     private boolean isActive;
 
-    public User() {
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Set<Item> items;
 
-    }
+    public User() {}
 
     public User(String name, String username, String email, String password) {
         this.name = name;
@@ -103,6 +104,18 @@ public class User extends DateAudit {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public void addItem(Item item){
+        if(items == null)
+            items = new HashSet<>();
+        items.add(item);
+    }
+
+    public void deleteItem(Item item){
+        if (items.contains(item)){
+            items.remove(item);
+        }
     }
 
     @Override
