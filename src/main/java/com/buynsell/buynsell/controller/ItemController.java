@@ -22,6 +22,9 @@ public class ItemController {
         item.setDescription("2015 Model");
         item.setActive(true);
         item.setPrice(220000.00);
+        item.setAvailable(true);
+        item.setContactEmail("yashjain12yj@gmail.com");
+        item.setContactName("9806886930");
         itemRepository.insert(item);
         return "Item created";
     }
