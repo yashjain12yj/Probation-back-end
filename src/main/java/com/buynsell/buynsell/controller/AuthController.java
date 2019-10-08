@@ -7,13 +7,15 @@ import com.buynsell.buynsell.payload.ApiResponse;
 import com.buynsell.buynsell.payload.AuthenticationTokenResponse;
 import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
-import com.buynsell.buynsell.repository.UserRepository;
 import com.buynsell.buynsell.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Optional;
