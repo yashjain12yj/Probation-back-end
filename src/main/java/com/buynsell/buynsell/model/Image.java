@@ -3,28 +3,29 @@ package com.buynsell.buynsell.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "IMAGES")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     @Lob
-    private Byte[] image;
+    private byte[] data;
 
     @ManyToOne
     Item item;
 
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public Byte[] getImage() {
-        return image;
+    public byte[] getData() {
+        return data;
     }
 
-    public void setImage(Byte[] image) {
-        this.image = image;
+    public void setData(byte[] data) {
+        this.data = data;
     }
 
     public Item getItem() {

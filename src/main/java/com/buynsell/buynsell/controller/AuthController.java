@@ -7,7 +7,7 @@ import com.buynsell.buynsell.payload.ApiResponse;
 import com.buynsell.buynsell.payload.AuthenticationTokenResponse;
 import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
-import com.buynsell.buynsell.service.AuthService;
+import com.buynsell.buynsell.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class AuthController {
 
     @Autowired
-    AuthService authService;
+    UserService userService;
 
     @Value("${secretKey}")
     private String secretKey;
@@ -33,7 +33,7 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         loginRequest.setPassword(AESEncryption.encrypt(loginRequest.getPassword(), secretKey));
-        Optional<User> user = authService.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail());
+        Optional<User> user = userService.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail());
         if (!user.isPresent()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
@@ -46,10 +46,10 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if (authService.existsByUsername(signUpRequest.getUsername())) {
+        if (userService.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new ApiResponse(false, "User is already taken!"));
         }
-        if (authService.existsByEmail(signUpRequest.getEmail())) {
+        if (userService.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new ApiResponse(true, "Email Address already in use!"));
         }
 
@@ -62,7 +62,7 @@ public class AuthController {
         user.setPassword(AESEncryption.encrypt(user.getPassword(), secretKey));
 
         // call service
-        User result = authService.save(user);
+        User result = userService.save(user);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Successfully Registered"));
     }
 }

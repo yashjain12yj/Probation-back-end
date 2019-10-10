@@ -26,8 +26,8 @@ public class LoadDataController {
         User user = new User();
         user.setName("Yash Jain");
         user.setActive(true);
-        user.setEmail("yashjain12yj@gmail.com");
-        user.setUsername("yashjain12yj");
+        user.setEmail("yashjain@gmail.com");
+        user.setUsername("yashjain");
         user.setPassword(AESEncryption.encrypt("yashjain", secretKey));
 
         userRepository.save(user);

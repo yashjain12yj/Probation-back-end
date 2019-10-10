@@ -45,11 +45,8 @@ public class Item extends DateAudit {
     @ManyToOne
     User user;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     Set<Image> images;
-
-    @NotNull(message = "Please provide active status")
-    private boolean active;
 
     public Set<Image> getImages() {
         return images;
@@ -94,14 +91,6 @@ public class Item extends DateAudit {
         this.price = price;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
     public boolean isAvailable() {
         return isAvailable;
     }
@@ -142,6 +131,14 @@ public class Item extends DateAudit {
         this.user = user;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
@@ -149,7 +146,12 @@ public class Item extends DateAudit {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", active=" + active +
+                ", isAvailable=" + isAvailable +
+                ", contactName='" + contactName + '\'' +
+                ", contactEmail='" + contactEmail + '\'' +
+                ", category='" + category + '\'' +
+                ", user=" + user +
+                ", images=" + images +
                 '}';
     }
 }

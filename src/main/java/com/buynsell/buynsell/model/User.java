@@ -62,6 +62,18 @@ public class User extends DateAudit {
         this.password = password;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Set<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
+    }
+
     public String getUsername() {
         return username;
     }
