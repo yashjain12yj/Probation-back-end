@@ -12,9 +12,8 @@ public class Image {
     @Lob
     private byte[] data;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     Item item;
-
 
     public Long getId() {
         return id;

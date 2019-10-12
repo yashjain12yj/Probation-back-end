@@ -2,9 +2,11 @@ package com.buynsell.buynsell.controller;
 
 import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
 import com.buynsell.buynsell.logger.Lby4j;
+import com.buynsell.buynsell.model.Image;
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.CreatePostDTO;
+import com.buynsell.buynsell.payload.PostDTO;
 import com.buynsell.buynsell.service.PostService;
 import com.buynsell.buynsell.service.UserService;
 import com.buynsell.buynsell.util.CurrentUser;
@@ -17,10 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
-
-import static com.buynsell.buynsell.encryption.AuthenticationTokenUtil.getUsernameOrEmailFromToken;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/post")
@@ -40,6 +41,7 @@ public class PostController {
 
     @PostMapping(value = "/", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createPost(@Valid CreatePostDTO createPost, MultipartFile[] images, @RequestHeader("token") String token) {
+
         // extract username
         String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, secretKey);
 
@@ -52,24 +54,18 @@ public class PostController {
         CurrentUser.setCurrentUser(user.get());
 
         try {
-            Item item = postService.createPost(createPost, images);
+            Item item = postService.createPost(createPost);
+            return ResponseEntity.status(HttpStatus.OK).body(item.getId());
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("IOException while persisting Image"+e.toString());
+            log.error("IOException while persisting Image" + e.toString());
         }
-        // save the post
-        return ResponseEntity.status(HttpStatus.OK).body("Post added, with post id:");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Some Error Occurred, Retry!");
     }
 
-    /*@PostMapping(value = "/image", consumes={"multipart/form-data"})
-    public ResponseEntity<?> createPost(MultipartFile[] images) {
-        Long id = 0L;
-        try {
-            id = postService.saveImage(images[0]);
-        } catch (IOException e) {
-            log.error("IOException in PostController.java - Line 36");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(id);
-    }*/
+    @GetMapping(value = "/{itemId}")
+    public ResponseEntity<PostDTO> getItem(@PathVariable Long itemId) {
+        log.info("The post id is " + itemId);
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getItem(itemId));
+    }
 }

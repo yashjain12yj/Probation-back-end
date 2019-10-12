@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,10 +43,10 @@ public class Item extends DateAudit {
 
     private String category;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     User user;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     Set<Image> images;
 
     public Set<Image> getImages() {
@@ -56,11 +57,6 @@ public class Item extends DateAudit {
         if (images == null)
             images = new HashSet<>();
         images.add(image);
-    }
-
-    public void removeImage(Image image) {
-        if (images.contains(image))
-            images.remove(image);
     }
 
     public long getId() {

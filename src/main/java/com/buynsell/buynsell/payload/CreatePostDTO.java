@@ -11,9 +11,19 @@ public class CreatePostDTO implements Serializable {
     String description;
     String category;
     String price;
-    String contactEmail;
     String contactName;
-//    ArrayList<Long> imageIds;
+    String contactEmail;
+    MultipartFile[] images;
+
+    public MultipartFile[] getImages() {
+        return images;
+    }
+
+    public void setImages(MultipartFile[] images) {
+        this.images = images;
+    }
+
+    //    ArrayList<Long> imageIds;
 //    MultipartFile[] images;
 
     @Override
