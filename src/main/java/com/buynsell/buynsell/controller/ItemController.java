@@ -3,6 +3,7 @@ package com.buynsell.buynsell.controller;
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,7 +21,6 @@ public class ItemController {
         Item item = new Item();
         item.setTitle("Car");
         item.setDescription("2015 Model");
-        item.setActive(true);
         item.setPrice(220000.00);
         item.setAvailable(true);
         item.setContactEmail("yashjain12yj@gmail.com");
@@ -36,7 +36,7 @@ public class ItemController {
     }
 
     // Create a new Item
-    @PostMapping("/items")
+    @PostMapping(value = "/items",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Item createItem(@Valid @RequestBody Item item) {
         return itemRepository.insert(item);
     }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,14 +43,11 @@ public class Item extends DateAudit {
 
     private String category;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     Set<Image> images;
-
-    @NotNull(message = "Please provide active status")
-    private boolean active;
 
     public Set<Image> getImages() {
         return images;
@@ -59,11 +57,6 @@ public class Item extends DateAudit {
         if (images == null)
             images = new HashSet<>();
         images.add(image);
-    }
-
-    public void removeImage(Image image) {
-        if (images.contains(image))
-            images.remove(image);
     }
 
     public long getId() {
@@ -92,14 +85,6 @@ public class Item extends DateAudit {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     public boolean isAvailable() {
@@ -142,6 +127,14 @@ public class Item extends DateAudit {
         this.user = user;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
@@ -149,7 +142,12 @@ public class Item extends DateAudit {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", active=" + active +
+                ", isAvailable=" + isAvailable +
+                ", contactName='" + contactName + '\'' +
+                ", contactEmail='" + contactEmail + '\'' +
+                ", category='" + category + '\'' +
+                ", user=" + user +
+                ", images=" + images +
                 '}';
     }
 }

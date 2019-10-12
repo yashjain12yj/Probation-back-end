@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,16 +51,22 @@ public class User extends DateAudit {
     @NotNull
     private boolean isActive;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Item> items;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String name, String username, String email, String password) {
-        this.name = name;
-        this.username = username.toLowerCase();
-        this.email = email;
-        this.password = password;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Set<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
     }
 
     public String getUsername() {
@@ -106,16 +113,10 @@ public class User extends DateAudit {
         isActive = active;
     }
 
-    public void addItem(Item item){
-        if(items == null)
+    public void addItem(Item item) {
+        if (items == null)
             items = new HashSet<>();
         items.add(item);
-    }
-
-    public void deleteItem(Item item){
-        if (items.contains(item)){
-            items.remove(item);
-        }
     }
 
     @Override
