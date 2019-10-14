@@ -3,7 +3,6 @@ package com.buynsell.buynsell.controller;
 import com.buynsell.buynsell.encryption.AESEncryption;
 import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
 import com.buynsell.buynsell.model.User;
-import com.buynsell.buynsell.payload.ApiResponse;
 import com.buynsell.buynsell.payload.AuthenticationTokenResponse;
 import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
@@ -46,11 +45,15 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+        // Validations
         if (userService.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new ApiResponse(false, "User is already taken!"));
-        }
-        if (userService.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(new ApiResponse(true, "Email Address already in use!"));
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("User is already taken!");
+        } else if (userService.existsByEmail(signUpRequest.getEmail())) {
+            return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Email Address already in use!");
+        } else if (!signUpRequest.getPassword().equals(signUpRequest.getConfirmPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password not equal!");
+        } else if (!signUpRequest.isValid()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid info!");
         }
 
         // Creating user's account
@@ -66,6 +69,6 @@ public class AuthController {
 
         // call service
         User result = userService.save(user);
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Successfully Registered"));
+        return ResponseEntity.status(HttpStatus.OK).body("Successfully Registered");
     }
 }
