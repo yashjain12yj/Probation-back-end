@@ -2,7 +2,6 @@ package com.buynsell.buynsell.controller;
 
 import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
 import com.buynsell.buynsell.logger.Lby4j;
-import com.buynsell.buynsell.model.Image;
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.CreatePostDTO;
@@ -19,9 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/post")
@@ -40,7 +37,7 @@ public class PostController {
     private String secretKey;
 
     @PostMapping(value = "/", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> createPost(@Valid CreatePostDTO createPost, MultipartFile[] images, @RequestHeader("token") String token) {
+    public ResponseEntity<?> createPost(@Valid CreatePostDTO createPostDTO, MultipartFile[] images, @RequestHeader("token") String token) {
 
         // extract username
         String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, secretKey);
@@ -54,7 +51,7 @@ public class PostController {
         CurrentUser.setCurrentUser(user.get());
 
         try {
-            Item item = postService.createPost(createPost);
+            Item item = postService.createPost(createPostDTO);
             return ResponseEntity.status(HttpStatus.OK).body(item.getId());
         } catch (IOException e) {
             e.printStackTrace();
