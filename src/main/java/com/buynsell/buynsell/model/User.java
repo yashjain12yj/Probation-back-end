@@ -1,5 +1,6 @@
 package com.buynsell.buynsell.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.lang.Nullable;
 
@@ -51,6 +52,7 @@ public class User extends DateAudit {
     @NotNull
     private boolean isActive;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Item> items;
 
