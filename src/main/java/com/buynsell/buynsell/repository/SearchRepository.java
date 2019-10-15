@@ -1,6 +1,9 @@
 package com.buynsell.buynsell.repository;
 
 import com.buynsell.buynsell.model.Item;
+import com.buynsell.buynsell.model.User;
+import com.buynsell.buynsell.util.CurrentUser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,18 +17,22 @@ public class SearchRepository {
     @PersistenceContext
     EntityManager entityManager;
 
-    public List<Item> getRecentItems(){
+    @Value("${numberOfRecentPost}")
+    private int numberOfRecentPost;
 
+    public List<Item> getRecentItems(User user) {
+        long userId;
+        if (user == null) {
+            userId = 0l;
+        } else {
+            userId = user.getId();
+        }
         // get items from db which are not of current user.
-        String mysqlQuery = "select * from item order by created_at desc limit 10";
-        String oracleQuery = "select * from item order by created_at desc ROWNUM <= 10";
-
-        String hql = "FROM Item item WHERE item.id != :itemId ORDER BY item.createdAt DESC";
+        String hql = "FROM Item item WHERE item.user.id != :userId ORDER BY item.createdAt DESC";
         Query query = entityManager.createQuery(hql);
-        query.setParameter("itemId", 10L);
-        query.setMaxResults(10);
+        query.setParameter("userId", userId);
+        query.setMaxResults(numberOfRecentPost);
         List items = query.getResultList();
-
 
         return items;
     }
