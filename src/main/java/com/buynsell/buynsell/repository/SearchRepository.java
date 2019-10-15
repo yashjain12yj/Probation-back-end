@@ -36,4 +36,22 @@ public class SearchRepository {
 
         return items;
     }
+
+    public List<Item> getSearchResult(User user, String searchQuery){
+        long userId;
+        if (user == null) {
+            userId = 0l;
+        } else {
+            userId = user.getId();
+        }
+
+        // get items from db which are not of current user.
+        String hql = "FROM Item item WHERE item.user.id != :userId AND item.searchString LIKE '%' || :searchQuery || '%' ORDER BY item.createdAt DESC";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("userId", userId);
+        query.setParameter("searchQuery", searchQuery);
+        List items = query.getResultList();
+
+        return items;
+    }
 }

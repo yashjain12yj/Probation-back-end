@@ -3,8 +3,6 @@ package com.buynsell.buynsell.payload;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CreatePostDTO implements Serializable {
     String title;

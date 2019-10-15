@@ -1,6 +1,5 @@
 package com.buynsell.buynsell.model;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,8 +15,8 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 public class Item extends DateAudit {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "item_id_seq")
-    @SequenceGenerator(name = "item_id_seq",sequenceName = "ITEM_ID_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_id_seq")
+    @SequenceGenerator(name = "item_id_seq", sequenceName = "ITEM_ID_SEQ")
     private long id;
 
     @NotBlank
@@ -49,6 +48,24 @@ public class Item extends DateAudit {
     @JsonManagedReference
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private Set<Image> images;
+
+    @Column(name = "SEARCH_STRING")
+    private String searchString;
+
+    @PreUpdate
+    @PrePersist
+    void updateSearchString() {
+        final String fullSearchString = getTitle() + getDescription() + getPrice() + getContactName() + getContactEmail() + getCategory();
+        setSearchString(fullSearchString);
+    }
+
+    public String getSearchString() {
+        return searchString;
+    }
+
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
 
     public Set<Image> getImages() {
         return images;
