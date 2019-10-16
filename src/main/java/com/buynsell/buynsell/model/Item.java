@@ -16,7 +16,7 @@ import java.util.Set;
 public class Item extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_id_seq")
-    @SequenceGenerator(name = "item_id_seq", sequenceName = "ITEM_ID_SEQ")
+    @SequenceGenerator(name = "item_id_seq", sequenceName = "ITEM_ID_SEQ", allocationSize = 1)
     private long id;
 
     @NotBlank

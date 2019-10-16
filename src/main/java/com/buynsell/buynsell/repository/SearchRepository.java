@@ -2,7 +2,6 @@ package com.buynsell.buynsell.repository;
 
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
-import com.buynsell.buynsell.util.CurrentUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 

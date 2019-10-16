@@ -8,10 +8,7 @@ import com.buynsell.buynsell.payload.PostDTO;
 import com.buynsell.buynsell.util.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import javax.transaction.Transactional;
-
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
