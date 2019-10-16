@@ -22,6 +22,9 @@ public class SearchController {
     @Value("${secretKey}")
     private String secretKey;
 
+    @Value("${tokenSecretKey}")
+    private String tokenSecretKey;
+
     @Autowired
     SearchService searchService;
 
@@ -35,7 +38,7 @@ public class SearchController {
         if (headers.get("token") != null) {
             String token = headers.get("token").get(0);
 
-            String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, secretKey);
+            String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, tokenSecretKey);
 
             // get user
             Optional<User> optUser = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
@@ -60,7 +63,7 @@ public class SearchController {
         if (headers.get("token") != null) {
             String token = headers.get("token").get(0);
 
-            String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, secretKey);
+            String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, tokenSecretKey);
 
             // get user
             Optional<User> optUser = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);

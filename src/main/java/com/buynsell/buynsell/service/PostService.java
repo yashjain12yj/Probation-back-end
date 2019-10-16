@@ -1,6 +1,7 @@
 package com.buynsell.buynsell.service;
 
 import com.buynsell.buynsell.model.Item;
+import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.CreatePostDTO;
 import com.buynsell.buynsell.payload.PostDTO;
 import com.buynsell.buynsell.repository.PostRepository;
@@ -15,8 +16,8 @@ public class PostService {
     @Autowired
     PostRepository postRepository;
 
-    public Item createPost(CreatePostDTO createPostDTO) throws IOException {
-        return postRepository.createPost(createPostDTO);
+    public Item createPost(CreatePostDTO createPostDTO, User user){
+        return postRepository.createPost(createPostDTO, user);
     }
 
     public PostDTO getItem(Long itemId) {

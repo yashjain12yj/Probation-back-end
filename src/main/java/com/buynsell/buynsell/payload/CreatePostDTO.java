@@ -13,29 +13,6 @@ public class CreatePostDTO implements Serializable {
     String contactEmail;
     MultipartFile[] images;
 
-    public MultipartFile[] getImages() {
-        return images;
-    }
-
-    public void setImages(MultipartFile[] images) {
-        this.images = images;
-    }
-
-    //    ArrayList<Long> imageIds;
-//    MultipartFile[] images;
-
-    @Override
-    public String toString() {
-        return "CreatePostDTO{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
-                ", price='" + price + '\'' +
-                ", contactEmail='" + contactEmail + '\'' +
-                ", contactName='" + contactName + '\'' +
-                '}';
-    }
-
     public String getTitle() {
         return title;
     }
@@ -68,14 +45,6 @@ public class CreatePostDTO implements Serializable {
         this.price = price;
     }
 
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
-    }
-
     public String getContactName() {
         return contactName;
     }
@@ -84,4 +53,19 @@ public class CreatePostDTO implements Serializable {
         this.contactName = contactName;
     }
 
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public MultipartFile[] getImages() {
+        return images;
+    }
+
+    public void setImages(MultipartFile[] images) {
+        this.images = images;
+    }
 }
