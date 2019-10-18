@@ -8,17 +8,14 @@ import com.buynsell.buynsell.payload.CreatePostDTO;
 import com.buynsell.buynsell.payload.PostDTO;
 import com.buynsell.buynsell.service.PostService;
 import com.buynsell.buynsell.service.UserService;
-import com.buynsell.buynsell.util.CurrentUser;
 import com.buynsell.buynsell.util.PostValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.Optional;
 
 @RestController

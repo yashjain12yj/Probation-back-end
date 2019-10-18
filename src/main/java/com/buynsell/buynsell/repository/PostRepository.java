@@ -5,7 +5,6 @@ import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.CreatePostDTO;
 import com.buynsell.buynsell.payload.PostDTO;
-import com.buynsell.buynsell.util.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
-import java.util.Optional;
 
 @Repository
 public class PostRepository {

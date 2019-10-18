@@ -1,9 +1,7 @@
 package com.buynsell.buynsell.repository;
 
-import com.buynsell.buynsell.encryption.AESEncryption;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.SignUpRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
