@@ -1,15 +1,12 @@
 package com.buynsell.buynsell.model;
 
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +15,8 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 public class Item extends DateAudit {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_id_seq")
+    @SequenceGenerator(name = "item_id_seq", sequenceName = "ITEM_ID_SEQ", allocationSize = 1)
     private long id;
 
     @NotBlank
@@ -43,11 +41,31 @@ public class Item extends DateAudit {
 
     private String category;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
-    User user;
+    private User user;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    Set<Image> images;
+    private Set<Image> images;
+
+    @Column(name = "SEARCH_STRING")
+    private String searchString;
+
+    @PreUpdate
+    @PrePersist
+    void updateSearchString() {
+        final String fullSearchString = getTitle() + getDescription() + getPrice() + getContactName() + getContactEmail() + getCategory();
+        setSearchString(fullSearchString);
+    }
+
+    public String getSearchString() {
+        return searchString;
+    }
+
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
 
     public Set<Image> getImages() {
         return images;

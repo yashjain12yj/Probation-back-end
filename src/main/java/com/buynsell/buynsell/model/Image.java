@@ -1,5 +1,7 @@
 package com.buynsell.buynsell.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,6 +14,7 @@ public class Image {
     @Lob
     private byte[] data;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     Item item;
 

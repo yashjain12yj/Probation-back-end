@@ -1,12 +1,13 @@
 package com.buynsell.buynsell.repository;
 
 import com.buynsell.buynsell.model.User;
+import com.buynsell.buynsell.payload.SignUpRequest;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,13 +17,30 @@ public class UserRepository {
     @PersistenceContext
     EntityManager em;
 
+
     @Transactional
-    public User save(User user) {
+    public User save(SignUpRequest signUpRequest) {
+        // Creating user's account
+        User user = new User();
+        user.setName(signUpRequest.getName());
+        user.setUsername(signUpRequest.getUsername());
+        user.setEmail(signUpRequest.getEmail());
+        user.setPassword(signUpRequest.getPassword());
+        user.setActive(true);
+
         if (!existsByEmail(user.getEmail())) {
-            em.persist(user);
-            return user;
+            try{
+                em.persist(user);
+                return user;
+            }catch (Exception ex){
+                return null;
+            }
         } else {
-            return em.merge(user);
+            try{
+                return em.merge(user);
+            }catch (Exception ex){
+                return null;
+            }
         }
     }
 

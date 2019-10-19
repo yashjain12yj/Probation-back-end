@@ -1,12 +1,8 @@
 package com.buynsell.buynsell.payload;
 
-import javax.validation.constraints.NotBlank;
-
 public class LoginRequest {
-    @NotBlank
     private String usernameOrEmail;
 
-    @NotBlank
     private String password;
 
     public String getUsernameOrEmail() {
@@ -23,13 +19,5 @@ public class LoginRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "LoginRequest{" +
-                "usernameOrEmail='" + usernameOrEmail + '\'' +
-                ", password='" + password + '\'' +
-                '}';
     }
 }
