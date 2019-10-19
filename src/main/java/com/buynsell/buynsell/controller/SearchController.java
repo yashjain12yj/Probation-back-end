@@ -5,6 +5,7 @@ import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.SearchRequestDTO;
 import com.buynsell.buynsell.service.SearchService;
 import com.buynsell.buynsell.service.UserService;
+import com.buynsell.buynsell.util.SearchValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -19,61 +20,35 @@ import java.util.*;
 @RequestMapping("/search")
 public class SearchController {
 
-    @Value("${secretKey}")
-    private String secretKey;
-
-    @Value("${tokenSecretKey}")
-    private String tokenSecretKey;
-
     @Autowired
     SearchService searchService;
 
     @Autowired
     UserService userService;
 
+    @Autowired
+    SearchValidator searchValidator;
+
     @GetMapping("/recentitems")
     public ResponseEntity<?> getRecentItems(@RequestHeader HttpHeaders headers) {
-        User user = null;
+        Optional<User> user = AuthenticationTokenUtil.getUserFromHeader(headers);
 
-        if (headers.get("token") != null) {
-            String token = headers.get("token").get(0);
-
-            String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, tokenSecretKey);
-
-            // get user
-            Optional<User> optUser = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-            if (optUser.isPresent()) {
-                user = optUser.get();
-            }
-        }
-        List items = searchService.getRecentItems(user);
+        List items = searchService.getRecentItems(user.get());
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
 
     @PostMapping("/searchItems")
     public ResponseEntity<?> searchItem(SearchRequestDTO searchRequestDTO, @RequestHeader HttpHeaders headers){
-
         String searchQuery = headers.get("searchQuery").get(0);
-        List items = new ArrayList();
-        if (searchQuery == null || searchQuery.trim().equals("")){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(items);
-        }
-        User user = null;
 
-        if (headers.get("token") != null) {
-            String token = headers.get("token").get(0);
+        ResponseEntity responseEntity = searchValidator.validateSearchQuery(searchQuery);
 
-            String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, tokenSecretKey);
+        if (responseEntity != null)
+            return responseEntity;
 
-            // get user
-            Optional<User> optUser = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-            if (optUser.isPresent()) {
-                user = optUser.get();
-            }
-        }
+        Optional<User> user = AuthenticationTokenUtil.getUserFromHeader(headers);
 
-        items = searchService.getSearchResult(user, searchQuery);
+        List items = searchService.getSearchResult(user.get(), searchQuery);
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
-
 }

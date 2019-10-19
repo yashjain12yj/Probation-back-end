@@ -1,6 +1,7 @@
 package com.buynsell.buynsell.controller;
 
 import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
+import com.buynsell.buynsell.encryption.AuthKeys;
 import com.buynsell.buynsell.logger.Lby4j;
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
@@ -10,7 +11,6 @@ import com.buynsell.buynsell.service.PostService;
 import com.buynsell.buynsell.service.UserService;
 import com.buynsell.buynsell.util.PostValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,17 +34,11 @@ public class PostController {
     @Autowired
     PostValidator postValidator;
 
-    @Value("${secretKey}")
-    private String secretKey;
-
-    @Value("${tokenSecretKey}")
-    private String tokenSecretKey;
-
     @PostMapping(value = "/", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createPost(@Valid CreatePostDTO createPostDTO, @RequestHeader("token") String token) {
 
         // Extract username from token
-        String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, tokenSecretKey);
+        String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, AuthKeys.getTokenSecretKey());
         // Get user
         Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         if (!user.isPresent())

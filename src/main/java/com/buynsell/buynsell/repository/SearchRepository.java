@@ -27,7 +27,7 @@ public class SearchRepository {
             userId = user.getId();
         }
         // get items from db which are not of current user.
-        String hql = "FROM Item item WHERE item.user.id != :userId ORDER BY item.createdAt DESC";
+        String hql = "FROM Item item WHERE item.user.id != :userId AND item.isAvailable = true ORDER BY item.createdAt DESC";
         Query query = entityManager.createQuery(hql);
         query.setParameter("userId", userId);
         query.setMaxResults(numberOfRecentPost);
@@ -45,7 +45,7 @@ public class SearchRepository {
         }
 
         // get items from db which are not of current user.
-        String hql = "FROM Item item WHERE item.user.id != :userId AND item.searchString LIKE '%' || :searchQuery || '%' ORDER BY item.createdAt DESC";
+        String hql = "FROM Item item WHERE item.user.id != :userId AND item.isAvailable = true AND item.searchString LIKE '%' || :searchQuery || '%' ORDER BY item.createdAt DESC";
         Query query = entityManager.createQuery(hql);
         query.setParameter("userId", userId);
         query.setParameter("searchQuery", searchQuery);

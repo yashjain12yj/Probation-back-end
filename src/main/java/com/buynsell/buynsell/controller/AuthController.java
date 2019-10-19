@@ -2,6 +2,7 @@ package com.buynsell.buynsell.controller;
 
 import com.buynsell.buynsell.encryption.AESEncryption;
 import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
+import com.buynsell.buynsell.encryption.AuthKeys;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.AuthenticationTokenResponse;
 import com.buynsell.buynsell.payload.LoginRequest;
@@ -9,7 +10,6 @@ import com.buynsell.buynsell.payload.SignUpRequest;
 import com.buynsell.buynsell.service.UserService;
 import com.buynsell.buynsell.util.AuthValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,12 +29,6 @@ public class AuthController {
     @Autowired
     AuthValidator authValidator;
 
-    @Value("${secretKey}")
-    private String secretKey;
-
-    @Value("${tokenSecretKey}")
-    private String tokenSecretKey;
-
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         // Validate Inputs
@@ -43,7 +37,7 @@ public class AuthController {
             return responseEntity;
         }
         // Encrypt Password
-        loginRequest.setPassword(AESEncryption.encrypt(loginRequest.getPassword(), secretKey));
+        loginRequest.setPassword(AESEncryption.encrypt(loginRequest.getPassword(), AuthKeys.getSecretKey()));
         // Request User from Service
         Optional<User> user = userService.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail());
         // Check if User exist
@@ -51,7 +45,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         // Check if password matches
         if (user.get().getPassword().equals(loginRequest.getPassword()))
-            return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(AuthenticationTokenUtil.generateToken(loginRequest.getUsernameOrEmail(), tokenSecretKey)));
+            return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(AuthenticationTokenUtil.generateToken(loginRequest.getUsernameOrEmail(), AuthKeys.getTokenSecretKey())));
         // If password does not match
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }
