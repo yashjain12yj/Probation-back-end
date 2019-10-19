@@ -50,6 +50,11 @@ public class PostValidator {
         }else if (contactName.trim().length() < 3 || contactName.trim().length() > 20){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Price must be 3 to 20 characters long");
         }
+        for (char c : contactName.toCharArray()) {
+            if (!Character.isLetter(c) && c != ' ') {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Contact Name should not contain any digit or special character");
+            }
+        }
 
         String contactEmail = createPostDTO.getContactEmail();
         if(contactEmail == null || contactEmail.trim().length() == 0){
@@ -70,7 +75,7 @@ public class PostValidator {
             if(image.getSize() == 0 || image.isEmpty()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(image.getName() + " is not readable");
             }else if (!image.getContentType().contains("image")){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(image.getOriginalFilename() + " is not image. Image required");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(image.getOriginalFilename() + " is not a image. Image required");
             } else if (image.getSize() > 1000000){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(image.getOriginalFilename() + ": Image must be less than 1 MB");
             }

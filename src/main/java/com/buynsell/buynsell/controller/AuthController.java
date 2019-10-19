@@ -65,7 +65,7 @@ public class AuthController {
 
         // Validations
         if (userService.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is already taken!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken!");
         } else if (userService.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email Address already in use!");
         }
