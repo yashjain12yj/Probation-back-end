@@ -82,7 +82,7 @@ public class AuthValidator {
                 hasSpecialCHr = true;
             }
         }
-        if (hasDigit && hasLower && hasSpecialCHr && hasUpper)
+        if (!(hasDigit && hasLower && hasSpecialCHr && hasUpper))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password much contain one lowercase, one uppercase, one digit and one special character");
 
         String confirmPassword = signUpRequest.getConfirmPassword().trim();

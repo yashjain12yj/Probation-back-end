@@ -29,6 +29,8 @@ public class AuthController {
     @Autowired
     AuthValidator authValidator;
 
+    @Autowired
+    AuthKeys authKeys;
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         // Validate Inputs
@@ -37,7 +39,7 @@ public class AuthController {
             return responseEntity;
         }
         // Encrypt Password
-        loginRequest.setPassword(AESEncryption.encrypt(loginRequest.getPassword(), AuthKeys.getSecretKey()));
+        loginRequest.setPassword(AESEncryption.encrypt(loginRequest.getPassword(), authKeys.getSecretKey()));
         // Request User from Service
         Optional<User> user = userService.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail());
         // Check if User exist
@@ -45,7 +47,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         // Check if password matches
         if (user.get().getPassword().equals(loginRequest.getPassword()))
-            return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(AuthenticationTokenUtil.generateToken(loginRequest.getUsernameOrEmail(), AuthKeys.getTokenSecretKey())));
+            return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(AuthenticationTokenUtil.generateToken(loginRequest.getUsernameOrEmail(), authKeys.getTokenSecretKey())));
         // If password does not match
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }

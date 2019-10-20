@@ -1,20 +1,22 @@
 package com.buynsell.buynsell.encryption;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AuthKeys {
 
     @Value("${secretKey}")
-    private static String secretKey;
+    private String secretKey;
 
     @Value("${tokenSecretKey}")
-    private static String tokenSecretKey;
+    private String tokenSecretKey;
 
-    public static String getSecretKey() {
+    public String getSecretKey() {
         return secretKey;
     }
 
-    public static String getTokenSecretKey() {
+    public String getTokenSecretKey() {
         return tokenSecretKey;
     }
 }

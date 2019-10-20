@@ -12,6 +12,9 @@ public class AuthenticationTokenUtil {
     @Autowired
     static UserService userService;
 
+    @Autowired
+    static AuthKeys authKeys;
+
     public static String generateToken(String usernameOrEmail, String secretKey){
         return AESEncryption.encrypt(usernameOrEmail, secretKey);
     }
@@ -24,7 +27,7 @@ public class AuthenticationTokenUtil {
         if (headers.get("token") != null) {
             String token = headers.get("token").get(0);
 
-            String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, AuthKeys.getTokenSecretKey());
+            String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
 
             // get user
             return userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
