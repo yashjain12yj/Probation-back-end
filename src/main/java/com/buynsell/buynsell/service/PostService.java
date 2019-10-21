@@ -27,4 +27,7 @@ public class PostService {
     public boolean markSoldout(String username, long itemId){
         return postRepository.markSoldout(username, itemId);
     }
+    public boolean markAvailable(String username, long itemId){
+        return postRepository.markAvailable(username, itemId);
+    }
 }

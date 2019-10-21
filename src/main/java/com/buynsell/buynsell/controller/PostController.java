@@ -38,11 +38,14 @@ public class PostController {
     @Autowired
     AuthKeys authKeys;
 
+    @Autowired
+    AuthenticationTokenUtil authenticationTokenUtil;
+
     @PostMapping(value = "/", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createPost(@Valid CreatePostDTO createPostDTO, @RequestHeader("token") String token) {
 
         // Extract username from token
-        String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
+        String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
         // Get user
         Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         if (!user.isPresent())
@@ -67,23 +70,54 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postDTO);
     }
 
-    @PostMapping("/markSoldout/{itemId}")
-    public ResponseEntity<?> markSoldout(@RequestHeader("token") String token, @PathVariable long itemId) {
+    @PostMapping("/markSold")
+    public ResponseEntity<?> markSoldout(@RequestHeader("token") String token, @RequestHeader("itemId") String itemId) {
+        long id;
+        try{
+            id = Long.parseLong(itemId);
+        } catch (NumberFormatException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong item id");
+        }
         // check for valid user
         // Extract username from token
-        String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
+        String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
 
         // Get user
         Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         if (!user.isPresent())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
 
-        boolean flag = postService.markSoldout(user.get().getUsername(), itemId);
+        boolean flag = postService.markSoldout(user.get().getUsername(), id);
 
         if (!flag) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
 
+        return ResponseEntity.status(HttpStatus.OK).body("Changed Availability");
+    }
+    @PostMapping("/markAvailable")
+    public ResponseEntity<?> markAvailable(@RequestHeader("token") String token, @RequestHeader("itemId") String itemId) {
+        long id;
+        try{
+            id = Long.parseLong(itemId);
+        } catch (NumberFormatException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong item id");
+        }
+
+        // check for valid user
+        // Extract username from token
+        String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
+
+        // Get user
+        Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        if (!user.isPresent())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
+
+        boolean flag = postService.markAvailable(user.get().getUsername(), id);
+
+        if (!flag) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
         return ResponseEntity.status(HttpStatus.OK).body("Changed Availability");
     }
 }

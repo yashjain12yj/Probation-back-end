@@ -32,11 +32,14 @@ public class UserProfileController {
     @Autowired
     AuthKeys authKeys;
 
+    @Autowired
+    AuthenticationTokenUtil authenticationTokenUtil;
+
     @PostMapping("/changePassword")
     public ResponseEntity<?> changePassword(@RequestHeader("token") String token, @RequestBody ChangePasswordDTO changePasswordDTO) {
         // check for valid user
         // Extract username from token
-        String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
+        String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
         // Get user
         Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         if (!user.isPresent())
@@ -61,7 +64,7 @@ public class UserProfileController {
     public ResponseEntity<?> getDashboard(@RequestHeader("token") String token) {
         // check for valid user
         // Extract username from token
-        String usernameOrEmail = AuthenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
+        String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
 
         // Get user
         Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
@@ -71,6 +74,5 @@ public class UserProfileController {
         DashboardDTO dashboardDTO = userProfileService.getDasboard(user.get());
         return ResponseEntity.status(HttpStatus.OK).body(dashboardDTO);
     }
-
 
 }

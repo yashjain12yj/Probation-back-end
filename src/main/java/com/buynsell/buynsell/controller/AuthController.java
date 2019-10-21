@@ -31,6 +31,10 @@ public class AuthController {
 
     @Autowired
     AuthKeys authKeys;
+
+    @Autowired
+    AuthenticationTokenUtil authenticationTokenUtil;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         // Validate Inputs
@@ -47,7 +51,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         // Check if password matches
         if (user.get().getPassword().equals(loginRequest.getPassword()))
-            return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(AuthenticationTokenUtil.generateToken(loginRequest.getUsernameOrEmail(), authKeys.getTokenSecretKey())));
+            return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(authenticationTokenUtil.generateToken(loginRequest.getUsernameOrEmail(), authKeys.getTokenSecretKey())));
         // If password does not match
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }
