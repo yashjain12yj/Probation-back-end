@@ -22,8 +22,8 @@ public class PostValidator {
         String description = createPostDTO.getDescription();
         if (description == null || description.trim().length() == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Description required");
-        } else if (description.trim().length() < 15 || description.trim().length() > 500) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Description must be 15 to 500 characters long");
+        } else if (description.trim().length() < 15 || description.trim().length() > 3000) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Description must be 15 to 3000 characters long");
         }
 
         String category = createPostDTO.getCategory();

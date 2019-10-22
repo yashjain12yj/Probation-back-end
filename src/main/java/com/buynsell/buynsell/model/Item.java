@@ -24,7 +24,7 @@ public class Item extends DateAudit {
     private String title;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false,length = 3000)
     private String description;
 
     @NotNull(message = "Please enter price")
@@ -49,14 +49,14 @@ public class Item extends DateAudit {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private Set<Image> images;
 
-    @Column(name = "SEARCH_STRING")
+    @Column(name = "SEARCH_STRING", length = 4000)
     private String searchString;
 
     @PreUpdate
     @PrePersist
     void updateSearchString() {
         final String fullSearchString = getTitle() + getDescription() + getPrice() + getContactName() + getContactEmail() + getCategory();
-        setSearchString(fullSearchString);
+        setSearchString(fullSearchString.toLowerCase());
     }
 
     public String getSearchString() {

@@ -48,7 +48,7 @@ public class SearchRepository {
         String hql = "FROM Item item WHERE item.user.id != :userId AND item.isAvailable = true AND item.searchString LIKE '%' || :searchQuery || '%' ORDER BY item.createdAt DESC";
         Query query = entityManager.createQuery(hql);
         query.setParameter("userId", userId);
-        query.setParameter("searchQuery", searchQuery);
+        query.setParameter("searchQuery", searchQuery.toLowerCase());
         List items = query.getResultList();
 
         return items;

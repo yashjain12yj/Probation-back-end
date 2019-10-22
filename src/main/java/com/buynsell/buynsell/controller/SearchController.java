@@ -34,7 +34,8 @@ public class SearchController {
     public ResponseEntity<?> getRecentItems(@RequestHeader HttpHeaders headers) {
         Optional<User> user = authenticationTokenUtil.getUserFromHeader(headers);
 
-        List items = searchService.getRecentItems(user.get());
+//        List items = searchService.getRecentItems(user.get());
+        List items = searchService.getRecentItems(null);
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
 
@@ -49,7 +50,8 @@ public class SearchController {
 
         Optional<User> user = authenticationTokenUtil.getUserFromHeader(headers);
 
-        List items = searchService.getSearchResult(user.get(), searchQuery);
+//        List items = searchService.getSearchResult(user.get(), searchQuery);
+        List items = searchService.getSearchResult(null, searchQuery);
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
 }
