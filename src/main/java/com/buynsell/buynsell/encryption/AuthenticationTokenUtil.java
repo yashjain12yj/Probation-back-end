@@ -29,7 +29,7 @@ public class AuthenticationTokenUtil {
     }
 
     public Optional<User> getUserFromHeader(HttpHeaders headers){
-        if (headers.get("token") != null) {
+        if (headers.get("token") != null || headers.containsKey("token")) {
             String token = headers.get("token").get(0);
 
             String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
