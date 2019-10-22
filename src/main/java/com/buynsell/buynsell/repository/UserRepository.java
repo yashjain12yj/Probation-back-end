@@ -17,7 +17,6 @@ public class UserRepository {
     @PersistenceContext
     EntityManager em;
 
-
     @Transactional
     public User save(SignUpRequest signUpRequest) {
         // Creating user's account

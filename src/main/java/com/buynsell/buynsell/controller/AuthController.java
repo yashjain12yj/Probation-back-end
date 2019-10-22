@@ -61,6 +61,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
+
         // Validate inputs
         ResponseEntity responseEntity = authValidator.validateSignup(signUpRequest);
         if (responseEntity != null)

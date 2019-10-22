@@ -1,24 +1,22 @@
 package com.buynsell.buynsell.service;
 
 import com.buynsell.buynsell.encryption.AESEncryption;
+import com.buynsell.buynsell.encryption.AuthKeys;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.SignUpRequest;
 import com.buynsell.buynsell.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class UserService {
-
-    @Value("${secretKey}")
-    private String secretKey;
-
-
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    AuthKeys authKeys;
 
     public Optional<User> findByUsernameOrEmail(String username, String email) {
         return userRepository.findByUsernameOrEmail(username, email);
@@ -33,7 +31,8 @@ public class UserService {
     }
 
     public User save(SignUpRequest signUpRequest) {
-        signUpRequest.setPassword(AESEncryption.encrypt(signUpRequest.getPassword(),secretKey));
+        signUpRequest.setPassword(AESEncryption.encrypt(signUpRequest.getPassword(), authKeys.getSecretKey()));
+        signUpRequest.setConfirmPassword(signUpRequest.getPassword());
         return userRepository.save(signUpRequest);
     }
 

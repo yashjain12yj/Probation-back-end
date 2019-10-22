@@ -1,4 +1,4 @@
 package com.buynsell.buynsell.repository;
 
-public class SearchRepository {
+public class SearchRepositoryTest {
 }
