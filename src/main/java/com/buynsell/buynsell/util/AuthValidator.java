@@ -52,10 +52,10 @@ public class AuthValidator {
             }
         }
 
-        String email = signUpRequest.getEmail().trim();
-        if (email == null || email.equals("")) {
+        String email = signUpRequest.getEmail();
+        if (email == null || email.trim().equals("")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email required");
-        } else if (email.length() > 30) {
+        } else if (email.trim().length() > 30) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email must be less than 30 characters");
         }
         Pattern regexPattern = Pattern.compile("^[(a-zA-Z-0-9-\\_\\+\\.)]+@[(a-z-A-z)]+\\.[(a-zA-z)]{2,3}$");
@@ -63,10 +63,10 @@ public class AuthValidator {
         if (!regMatcher.matches())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Email");
 
-        String password = signUpRequest.getPassword().trim();
-        if (password == null || password.equals("")) {
+        String password = signUpRequest.getPassword();
+        if (password == null || password.trim().equals("")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password required");
-        } else if (password.length() < 8 || password.length() > 20) {
+        } else if (password.trim().length() < 8 || password.trim().length() > 20) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be 6 to 20 characters long");
         }
         boolean hasLower = false, hasUpper = false, hasDigit = false, hasSpecialCHr = false;
@@ -82,7 +82,7 @@ public class AuthValidator {
                 hasSpecialCHr = true;
             }
         }
-        if (hasDigit && hasLower && hasSpecialCHr && hasUpper)
+        if (!(hasDigit && hasLower && hasSpecialCHr && hasUpper))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password much contain one lowercase, one uppercase, one digit and one special character");
 
         String confirmPassword = signUpRequest.getConfirmPassword().trim();

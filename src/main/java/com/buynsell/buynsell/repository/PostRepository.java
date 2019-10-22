@@ -93,4 +93,41 @@ public class PostRepository {
         return postDTO;
     }
 
+    @Transactional
+    public boolean markSoldout(String username, long itemId){
+        Item item = entityManager.find(Item.class, itemId);
+
+        if (item == null){
+            return false;
+        }
+
+        // check item is associated with username.
+        if (!item.getUser().getUsername().equals(username))
+            return false;
+
+        item.setAvailable(false);
+
+        entityManager.merge(item);
+
+        return true;
+    }
+
+    @Transactional
+    public boolean markAvailable(String username, long itemId){
+        Item item = entityManager.find(Item.class, itemId);
+
+        if (item == null){
+            return false;
+        }
+
+        // check item is associated with username.
+        if (!item.getUser().getUsername().equals(username))
+            return false;
+
+        item.setAvailable(true);
+
+        entityManager.merge(item);
+
+        return true;
+    }
 }

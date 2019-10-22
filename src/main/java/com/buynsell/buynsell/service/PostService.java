@@ -23,4 +23,11 @@ public class PostService {
     public PostDTO getItem(Long itemId) {
         return postRepository.getItem(itemId);
     }
+
+    public boolean markSoldout(String username, long itemId){
+        return postRepository.markSoldout(username, itemId);
+    }
+    public boolean markAvailable(String username, long itemId){
+        return postRepository.markAvailable(username, itemId);
+    }
 }

@@ -7,13 +7,11 @@ import com.buynsell.buynsell.service.SearchService;
 import com.buynsell.buynsell.service.UserService;
 import com.buynsell.buynsell.util.SearchValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.*;
 
 @RestController
@@ -29,9 +27,12 @@ public class SearchController {
     @Autowired
     SearchValidator searchValidator;
 
+    @Autowired
+    AuthenticationTokenUtil authenticationTokenUtil;
+
     @GetMapping("/recentitems")
     public ResponseEntity<?> getRecentItems(@RequestHeader HttpHeaders headers) {
-        Optional<User> user = AuthenticationTokenUtil.getUserFromHeader(headers);
+        Optional<User> user = authenticationTokenUtil.getUserFromHeader(headers);
 
         List items = searchService.getRecentItems(user.get());
         return ResponseEntity.status(HttpStatus.OK).body(items);
@@ -46,7 +47,7 @@ public class SearchController {
         if (responseEntity != null)
             return responseEntity;
 
-        Optional<User> user = AuthenticationTokenUtil.getUserFromHeader(headers);
+        Optional<User> user = authenticationTokenUtil.getUserFromHeader(headers);
 
         List items = searchService.getSearchResult(user.get(), searchQuery);
         return ResponseEntity.status(HttpStatus.OK).body(items);
