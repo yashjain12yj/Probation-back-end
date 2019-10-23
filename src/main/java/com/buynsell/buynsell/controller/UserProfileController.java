@@ -5,6 +5,7 @@ import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.ChangePasswordDTO;
 import com.buynsell.buynsell.payload.DashboardDTO;
+import com.buynsell.buynsell.payload.UserInfo;
 import com.buynsell.buynsell.service.UserProfileService;
 import com.buynsell.buynsell.service.UserService;
 import com.buynsell.buynsell.util.UserProfileValidator;
@@ -17,62 +18,49 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/private/user")
 public class UserProfileController {
 
     @Autowired
-    UserProfileService userProfileService;
+    private UserProfileService userProfileService;
 
     @Autowired
-    UserProfileValidator userProfileValidator;
+    private UserProfileValidator userProfileValidator;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    AuthKeys authKeys;
+    private AuthKeys authKeys;
 
     @Autowired
-    AuthenticationTokenUtil authenticationTokenUtil;
+    private AuthenticationTokenUtil authenticationTokenUtil;
+
+    @Autowired
+    UserInfo userInfo;
 
     @PostMapping("/changePassword")
-    public ResponseEntity<?> changePassword(@RequestHeader("token") String token, @RequestBody ChangePasswordDTO changePasswordDTO) {
-        // check for valid user
-        // Extract username from token
-        String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
-        // Get user
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+        String usernameOrEmail = userInfo.getEmail();
         Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-        if (!user.isPresent())
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
-
         ResponseEntity responseEntity = userProfileValidator.changePasswordValidator(changePasswordDTO);
-
         if (responseEntity != null)
             return responseEntity;
-
         int res = userProfileService.changePassword(user.get(), changePasswordDTO);
-        if (res == 1) {
+        if (res == 1)
             return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
-        } else if (res == 0) {
+        else if (res == 0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your current password is wrong!");
-        } else {
+        else
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
-        }
+
     }
 
     @GetMapping("/dashboard")
-    public ResponseEntity<?> getDashboard(@RequestHeader("token") String token) {
-        // check for valid user
-        // Extract username from token
-        String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
-
-        // Get user
+    public ResponseEntity<?> getDashboard() {
+        String usernameOrEmail = userInfo.getEmail();
         Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-        if (!user.isPresent())
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in");
-
         DashboardDTO dashboardDTO = userProfileService.getDasboard(user.get());
         return ResponseEntity.status(HttpStatus.OK).body(dashboardDTO);
     }
-
 }

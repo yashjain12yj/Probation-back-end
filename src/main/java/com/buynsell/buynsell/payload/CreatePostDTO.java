@@ -5,13 +5,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.Serializable;
 
 public class CreatePostDTO implements Serializable {
-    String title;
-    String description;
-    String category;
-    String price;
-    String contactName;
-    String contactEmail;
-    MultipartFile[] images;
+    private String title;
+    private String description;
+    private String category;
+    private String price;
+    private String contactName;
+    private String contactEmail;
+    private MultipartFile[] images;
 
     public String getTitle() {
         return title;

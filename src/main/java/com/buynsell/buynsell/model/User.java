@@ -2,27 +2,18 @@ package com.buynsell.buynsell.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.NaturalId;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
-@Table(name = "USERS", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "username"
-        }),
-        @UniqueConstraint(columnNames = {
-                "email"
-        })
-})
+@Table(name = "USERS")
 public class User extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,13 +26,14 @@ public class User extends DateAudit {
 
     @NotBlank
     @Size(max = 15)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @NaturalId
     @NotBlank
     @Size(max = 40)
     @Email
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @NotBlank

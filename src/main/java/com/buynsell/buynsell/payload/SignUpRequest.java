@@ -1,19 +1,11 @@
 package com.buynsell.buynsell.payload;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 public class SignUpRequest {
 
     private String name;
-
     private String username;
-
     private String email;
-
     private String password;
-
     private String confirmPassword;
 
     public String getName() {

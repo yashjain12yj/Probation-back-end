@@ -1,8 +1,8 @@
 package com.buynsell.buynsell.payload;
 
 public class ImageDTO {
-    Long id;
-    byte[] data;
+    private Long id;
+    private byte[] data;
 
     public ImageDTO(Long id, byte[] data) {
         this.id = id;

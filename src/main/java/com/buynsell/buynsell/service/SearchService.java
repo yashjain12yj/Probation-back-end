@@ -11,7 +11,8 @@ import java.util.List;
 @Service
 public class SearchService {
     @Autowired
-    SearchRepository searchRepository;
+    private SearchRepository searchRepository;
+
     public List getRecentItems(User user){
         return searchRepository.getRecentItems(user);
     }

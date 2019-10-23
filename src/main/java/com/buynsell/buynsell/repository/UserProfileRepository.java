@@ -21,10 +21,10 @@ import java.util.Set;
 public class UserProfileRepository {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
-    AuthKeys authKeys;
+    private AuthKeys authKeys;
     /**
      *
      * @param user
@@ -33,28 +33,20 @@ public class UserProfileRepository {
      */
     @Transactional
     public int changePassword(User user, ChangePasswordDTO changePasswordDTO){
-
-        String oldPassword = changePasswordDTO.getOldPassword();
-
-        String newPassword = changePasswordDTO.getNewPassword();
-
         if (user == null)
             return 0;
-
-        oldPassword = AESEncryption.encrypt(changePasswordDTO.getOldPassword(), authKeys.getSecretKey());
-
+        String oldPassword = AESEncryption.encrypt(changePasswordDTO.getOldPassword(), authKeys.getSecretKey());
         if (!(user.getPassword().equals(oldPassword)))
             return 0;
-
         user.setPassword(AESEncryption.encrypt(changePasswordDTO.getNewPassword(), authKeys.getSecretKey()));
         entityManager.merge(user);
         return 1;
     }
 
+
     public DashboardDTO getDashboard(User user){
         DashboardDTO dashboardDTO = new DashboardDTO();
         ArrayList<Item> items = new ArrayList<>();
-
         for(Item item: user.getItems()){
             item.setUser(null);
             Set<Image> images;
@@ -63,9 +55,7 @@ public class UserProfileRepository {
                 image.setItem(null);
             items.add(item);
         }
-
         dashboardDTO.setItems(items);
-
         return dashboardDTO;
     }
 }

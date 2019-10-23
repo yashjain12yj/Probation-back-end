@@ -12,13 +12,13 @@ import java.util.Optional;
 public class AuthenticationTokenUtil {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    AuthKeys authKeys;
+    private AuthKeys authKeys;
 
     @Autowired
-    AuthenticationTokenUtil authenticationTokenUtil;
+    private AuthenticationTokenUtil authenticationTokenUtil;
 
     public String generateToken(String usernameOrEmail, String secretKey){
         return AESEncryption.encrypt(usernameOrEmail, secretKey);
@@ -31,10 +31,7 @@ public class AuthenticationTokenUtil {
     public Optional<User> getUserFromHeader(HttpHeaders headers){
         if (headers.get("token") != null || headers.containsKey("token")) {
             String token = headers.get("token").get(0);
-
             String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
-
-            // get user
             return userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         }
         return Optional.empty();

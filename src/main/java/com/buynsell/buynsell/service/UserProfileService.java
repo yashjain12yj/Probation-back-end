@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 public class UserProfileService {
 
     @Autowired
-    UserProfileRepository userProfileRepository;
+    private UserProfileRepository userProfileRepository;
+
     public int changePassword(User user, ChangePasswordDTO changePasswordDTO){
         return userProfileRepository.changePassword(user, changePasswordDTO);
     }

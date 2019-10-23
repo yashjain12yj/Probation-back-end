@@ -9,14 +9,14 @@ import javax.persistence.*;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Lob
     private byte[] data;
 
     @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
-    Item item;
+    private Item item;
 
     public Long getId() {
         return id;

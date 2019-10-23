@@ -8,15 +8,14 @@ import com.buynsell.buynsell.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
 @Service
 public class PostService {
 
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
 
     public Item createPost(CreatePostDTO createPostDTO, User user){
+
         return postRepository.createPost(createPostDTO, user);
     }
 
@@ -25,7 +24,7 @@ public class PostService {
     }
 
     public boolean markSoldout(String username, long itemId){
-        return postRepository.markSoldout(username, itemId);
+        return postRepository.markSold(username, itemId);
     }
     public boolean markAvailable(String username, long itemId){
         return postRepository.markAvailable(username, itemId);

@@ -16,15 +16,13 @@ import java.io.IOException;
 @Repository
 public class PostRepository {
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Transactional
     public Item createPost(CreatePostDTO createPostDTO, User user) {
-
-        // create item and set props
         Item item = new Item();
         item.setTitle(createPostDTO.getTitle());
         item.setDescription(createPostDTO.getDescription());
@@ -37,7 +35,6 @@ public class PostRepository {
 
         user.addItem(item);
 
-        // add all the images to item
         for (int i = 0; i < createPostDTO.getImages().length; i++) {
             Image image = new Image();
             try {
@@ -50,7 +47,6 @@ public class PostRepository {
             item.addImage(image);
         }
 
-        //persist item
         try{
             entityManager.persist(item);
         }catch (Exception ex){
@@ -80,10 +76,8 @@ public class PostRepository {
         postDTO.setContactEmail(item.getContactEmail());
         postDTO.setCreatedAt(item.getCreatedAt());
 
-        // to add images to ImageDTO
-        for (Image image : item.getImages()) {
+        for (Image image : item.getImages())
             postDTO.addImage(image);
-        }
 
         User user = new User();
         user.setName(item.getUser().getName());
@@ -94,40 +88,26 @@ public class PostRepository {
     }
 
     @Transactional
-    public boolean markSoldout(String username, long itemId){
+    public boolean markSold(String username, long itemId){
         Item item = entityManager.find(Item.class, itemId);
-
-        if (item == null){
+        if (item == null)
             return false;
-        }
-
-        // check item is associated with username.
         if (!item.getUser().getUsername().equals(username))
             return false;
-
         item.setAvailable(false);
-
         entityManager.merge(item);
-
         return true;
     }
 
     @Transactional
     public boolean markAvailable(String username, long itemId){
         Item item = entityManager.find(Item.class, itemId);
-
-        if (item == null){
+        if (item == null)
             return false;
-        }
-
-        // check item is associated with username.
         if (!item.getUser().getUsername().equals(username))
             return false;
-
         item.setAvailable(true);
-
         entityManager.merge(item);
-
         return true;
     }
 }

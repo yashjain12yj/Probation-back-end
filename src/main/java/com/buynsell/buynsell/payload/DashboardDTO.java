@@ -7,7 +7,7 @@ import com.buynsell.buynsell.model.Item;
 import java.util.List;
 
 public class DashboardDTO {
-    List<Item> items;
+    private List<Item> items;
 
     public List<Item> getItems() {
         return items;

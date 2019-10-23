@@ -13,10 +13,10 @@ import java.util.Optional;
 @Service
 public class UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    AuthKeys authKeys;
+    private AuthKeys authKeys;
 
     public Optional<User> findByUsernameOrEmail(String username, String email) {
         return userRepository.findByUsernameOrEmail(username, email);
