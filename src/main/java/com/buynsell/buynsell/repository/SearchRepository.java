@@ -22,34 +22,31 @@ public class SearchRepository {
     private int numberOfRecentPost;
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Item> getRecentItems(User user) {
-        long userId;
-        if (user == null)
-            userId = 0l;
-        else
-            userId = user.getId();
-        String hql = "FROM Item item WHERE item.user.id != :userId AND item.isAvailable = true ORDER BY item.createdAt DESC";
-        Query query = entityManager.createQuery(hql);
-        query.setParameter("userId", userId);
-        query.setMaxResults(numberOfRecentPost);
-        List items = query.getResultList();
-        return items;
+    public List<Item> getRecentItems() {
+        try {
+            String hql = "FROM Item item WHERE item.isAvailable = true ORDER BY item.createdAt DESC";
+            Query query = entityManager.createQuery(hql);
+            query.setMaxResults(numberOfRecentPost);
+            List items = query.getResultList();
+            return items;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Item> getSearchResult(User user, String searchQuery){
-        long userId;
-        if (user == null)
-            userId = 0l;
-        else
-            userId = user.getId();
+    public List<Item> getSearchResult(String searchQuery) {
+        try{
+            String hql = "FROM Item item WHERE item.isAvailable = true AND item.searchString LIKE '%' || :searchQuery || '%' ORDER BY item.createdAt DESC";
+            Query query = entityManager.createQuery(hql);
+            query.setParameter("searchQuery", searchQuery.toLowerCase());
+            List items = query.getResultList();
+            return items;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
 
-        String hql = "FROM Item item WHERE item.user.id != :userId AND item.isAvailable = true AND item.searchString LIKE '%' || :searchQuery || '%' ORDER BY item.createdAt DESC";
-        Query query = entityManager.createQuery(hql);
-        query.setParameter("userId", userId);
-        query.setParameter("searchQuery", searchQuery.toLowerCase());
-        List items = query.getResultList();
-
-        return items;
     }
 }

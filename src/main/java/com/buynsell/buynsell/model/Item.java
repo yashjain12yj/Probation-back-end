@@ -42,7 +42,7 @@ public class Item extends DateAudit {
     private String category;
 
     @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User user;
 
     @JsonManagedReference

@@ -31,22 +31,14 @@ public class UserProfileController {
     private UserService userService;
 
     @Autowired
-    private AuthKeys authKeys;
-
-    @Autowired
-    private AuthenticationTokenUtil authenticationTokenUtil;
-
-    @Autowired
     UserInfo userInfo;
 
     @PostMapping("/changePassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
-        String usernameOrEmail = userInfo.getEmail();
-        Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         ResponseEntity responseEntity = userProfileValidator.changePasswordValidator(changePasswordDTO);
         if (responseEntity != null)
             return responseEntity;
-        int res = userProfileService.changePassword(user.get(), changePasswordDTO);
+        int res = userProfileService.changePassword(changePasswordDTO);
         if (res == 1)
             return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
         else if (res == 0)
@@ -58,9 +50,9 @@ public class UserProfileController {
 
     @GetMapping("/dashboard")
     public ResponseEntity<?> getDashboard() {
-        String usernameOrEmail = userInfo.getEmail();
-        Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-        DashboardDTO dashboardDTO = userProfileService.getDasboard(user.get());
+        DashboardDTO dashboardDTO = userProfileService.getDashboard();
+        if (dashboardDTO == null)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         return ResponseEntity.status(HttpStatus.OK).body(dashboardDTO);
     }
 }

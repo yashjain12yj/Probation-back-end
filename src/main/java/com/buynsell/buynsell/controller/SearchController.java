@@ -21,17 +21,14 @@ public class SearchController {
     private SearchService searchService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private SearchValidator searchValidator;
-
-    @Autowired
-    private AuthenticationTokenUtil authenticationTokenUtil;
 
     @GetMapping("/recentitems")
     public ResponseEntity<?> getRecentItems() {
-        List items = searchService.getRecentItems(null);
+        List items = searchService.getRecentItems();
+        if (items == null){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No content found");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
 
@@ -41,7 +38,10 @@ public class SearchController {
         ResponseEntity responseEntity = searchValidator.validateSearchQuery(searchQuery);
         if (responseEntity != null)
             return responseEntity;
-        List items = searchService.getSearchResult(null, searchQuery);
+        List items = searchService.getSearchResult(searchQuery);
+        if (items == null){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No content found");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
 }

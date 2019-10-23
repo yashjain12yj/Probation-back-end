@@ -34,6 +34,8 @@ public class UserProfileValidator {
         String confirmNewPassword = changePasswordDTO.getConfirmNewPassword();
         if (!newPassword.equals(confirmNewPassword))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password and confirm password must be equal");
+        if (oldPassword.equals(newPassword))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Old Password is same as new password.");
         return null;
     }
 }

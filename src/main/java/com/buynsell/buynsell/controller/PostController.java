@@ -22,36 +22,24 @@ import java.util.logging.Logger;
 @RestController
 public class PostController {
 
-    private static final Logger log = Logger.getLogger(AuthController.class.getName());
+    private static final Logger log = Logger.getLogger(PostController.class.getName());
 
     @Autowired
     private PostService postService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private PostValidator postValidator;
-
-    @Autowired
-    private AuthKeys authKeys;
-
-    @Autowired
-    private AuthenticationTokenUtil authenticationTokenUtil;
 
     @Autowired
     UserInfo userInfo;
 
     @PostMapping(value = "/private/post/", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createPost(@Valid CreatePostDTO createPostDTO) {
-
-        String usernameOrEmail = userInfo.getEmail();
-        Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-
+        log.info("/private/post/ -> started");
         ResponseEntity responseEntity = postValidator.validateCreatePost(createPostDTO);
         if (responseEntity != null)
             return responseEntity;
-        Item item = postService.createPost(createPostDTO, user.get());
+        Item item = postService.createPost(createPostDTO);
         if (item == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Some Error Occurred, Retry!");
         return ResponseEntity.status(HttpStatus.OK).body(item.getId());
@@ -59,24 +47,23 @@ public class PostController {
 
     @GetMapping(value = "/post/{itemId}")
     public ResponseEntity<?> getItem(@PathVariable Long itemId) {
+        log.info("/post/{itemId} -> started");
         PostDTO postDTO = postService.getItem(itemId);
         if (postDTO == null)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Item Not found/ Error");
         return ResponseEntity.status(HttpStatus.OK).body(postDTO);
     }
 
     @PostMapping("/private/post/markSold")
-    public ResponseEntity<?> markSoldout(@RequestHeader("itemId") String itemId) {
+    public ResponseEntity<?> markSold(@RequestHeader("itemId") String itemId) {
+        log.info("/private/post/markSold -> Started");
         long id;
         try {
             id = Long.parseLong(itemId);
         } catch (NumberFormatException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong item id");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid item id");
         }
-        String usernameOrEmail = userInfo.getEmail();
-        Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-
-        boolean flag = postService.markSoldout(user.get().getUsername(), id);
+        boolean flag = postService.markSold(id);
         if (!flag)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         return ResponseEntity.status(HttpStatus.OK).body("Changed Availability");
@@ -84,13 +71,14 @@ public class PostController {
 
     @PostMapping("/private/post/markAvailable")
     public ResponseEntity<?> markAvailable(@RequestHeader("itemId") String itemId) {
+        log.info("/private/post/markAvailable -> Started");
         long id;
         try {
             id = Long.parseLong(itemId);
         } catch (NumberFormatException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong item id");
         }
-        boolean flag = postService.markAvailable(userInfo.getUsername(), id);
+        boolean flag = postService.markAvailable(id);
         if (!flag)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         return ResponseEntity.status(HttpStatus.OK).body("Changed Availability");

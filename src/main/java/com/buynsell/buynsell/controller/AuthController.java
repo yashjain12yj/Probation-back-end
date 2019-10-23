@@ -38,22 +38,9 @@ public class AuthController {
     @Autowired
     private AuthenticationTokenUtil authenticationTokenUtil;
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        ResponseEntity responseEntity = authValidator.validateSignin(loginRequest);
-        if (responseEntity != null)
-            return responseEntity;
-        loginRequest.setPassword(AESEncryption.encrypt(loginRequest.getPassword(), authKeys.getSecretKey()));
-        Optional<User> user = userService.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail());
-        if (!user.isPresent())
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-        if (user.get().getPassword().equals(loginRequest.getPassword()))
-            return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(authenticationTokenUtil.generateToken(loginRequest.getUsernameOrEmail(), authKeys.getTokenSecretKey())));
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-    }
-
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
+        log.info("/signup started");
         ResponseEntity responseEntity = authValidator.validateSignup(signUpRequest);
         if (responseEntity != null)
             return responseEntity;
@@ -64,5 +51,19 @@ public class AuthController {
         if (userService.save(signUpRequest) == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         return ResponseEntity.status(HttpStatus.OK).body("Successfully Registered");
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        log.info("/signin started");
+        ResponseEntity responseEntity = authValidator.validateSignin(loginRequest);
+        if (responseEntity != null)
+            return responseEntity;
+        String token = userService.checkAuth(loginRequest);
+
+        if (token == null || token.equals("")){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(token));
     }
 }

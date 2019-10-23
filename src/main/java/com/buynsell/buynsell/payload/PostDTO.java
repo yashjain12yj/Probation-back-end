@@ -3,6 +3,7 @@ package com.buynsell.buynsell.payload;
 import com.buynsell.buynsell.model.Image;
 import com.buynsell.buynsell.model.User;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +18,7 @@ public class PostDTO {
     private String category;
     private User user;
     private Set<ImageDTO> images;
-    private Instant createdAt;
+    private String createdAt;
     private boolean isAvailable;
 
     public PostDTO(){
@@ -104,11 +105,11 @@ public class PostDTO {
         isAvailable = available;
     }
 
-    public Instant getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 }

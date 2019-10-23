@@ -13,11 +13,11 @@ public class SearchService {
     @Autowired
     private SearchRepository searchRepository;
 
-    public List getRecentItems(User user){
-        return searchRepository.getRecentItems(user);
+    public List getRecentItems(){
+        return searchRepository.getRecentItems();
     }
 
-    public List<Item> getSearchResult(User user, String searchQuery){
-        return searchRepository.getSearchResult(user, searchQuery);
+    public List<Item> getSearchResult(String searchQuery){
+        return searchRepository.getSearchResult(searchQuery);
     }
 }

@@ -15,7 +15,7 @@ public class Image {
     private byte[] data;
 
     @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Item item;
 
     public Long getId() {

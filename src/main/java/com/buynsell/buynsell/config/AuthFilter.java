@@ -44,7 +44,7 @@ public class AuthFilter implements Filter {
         try{
             String token = request.getHeader("token");
             String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
-            Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+            Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail);
             if (!user.isPresent()) {
                 log.info("########## User not logged in or invalid token ##########");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");

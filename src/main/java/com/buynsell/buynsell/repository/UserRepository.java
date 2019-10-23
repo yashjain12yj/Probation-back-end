@@ -18,13 +18,7 @@ public class UserRepository {
     private EntityManager em;
 
     @Transactional
-    public User save(SignUpRequest signUpRequest) {
-        User user = new User();
-        user.setName(signUpRequest.getName());
-        user.setUsername(signUpRequest.getUsername());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(signUpRequest.getPassword());
-        user.setActive(true);
+    public User save(User user) {
         if (!existsByEmail(user.getEmail())) {
             try{
                 em.persist(user);
@@ -42,10 +36,10 @@ public class UserRepository {
     }
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Optional<User> findByUsernameOrEmail(String username, String email) {
+    public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
         Query query = em.createQuery("SELECT u FROM User u WHERE u.username = :username or u.email = :email");
-        query.setParameter("username", username.toLowerCase());
-        query.setParameter("email",email.toLowerCase());
+        query.setParameter("username", usernameOrEmail.toLowerCase());
+        query.setParameter("email",usernameOrEmail.toLowerCase());
         List<User> resultList = query.getResultList();
         if (resultList.size() == 0)
             return Optional.empty();
