@@ -11,8 +11,6 @@ public class PostDTO {
     private String title;
     private String description;
     private Double price;
-    private String contactName;
-    private String contactEmail;
     private String category;
     private User user;
     private Set<ImageDTO> images;
@@ -61,22 +59,6 @@ public class PostDTO {
 
     public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public String getContactName() {
-        return contactName;
-    }
-
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
     }
 
     public String getCategory() {

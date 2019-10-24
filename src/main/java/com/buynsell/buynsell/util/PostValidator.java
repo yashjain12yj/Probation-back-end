@@ -35,23 +35,6 @@ public class PostValidator {
         } catch (NumberFormatException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Price must be a number");
         }
-        String contactName = createPostDTO.getContactName();
-        if (contactName == null || contactName.trim().length() == 0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Contact name required");
-        else if (contactName.trim().length() < 3 || contactName.trim().length() > 20)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Price must be 3 to 20 characters long");
-        for (char c : contactName.toCharArray())
-            if (!Character.isLetter(c) && c != ' ')
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Contact Name should not contain any digit or special character");
-        String contactEmail = createPostDTO.getContactEmail();
-        if(contactEmail == null || contactEmail.trim().length() == 0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Contact Email required");
-        else if (contactEmail.trim().length() < 5 || contactEmail.trim().length() > 40)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Contact email must be 5 to 50 characters long");
-        Pattern regexPattern = Pattern.compile("^[(a-zA-Z-0-9-\\_\\+\\.)]+@[(a-z-A-z)]+\\.[(a-zA-z)]{2,3}$");
-        Matcher regMatcher = regexPattern.matcher(contactEmail);
-        if (!regMatcher.matches())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Email");
         MultipartFile[] images = createPostDTO.getImages();
         if (images == null || images.length == 0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Image required");

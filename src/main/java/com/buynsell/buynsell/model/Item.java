@@ -33,12 +33,8 @@ public class Item extends DateAudit {
     @NotNull(message = "Please give availability")
     private boolean isAvailable;
 
-    @NotBlank
-    private String contactName;
-
-    @NotBlank
-    private String contactEmail;
-
+    @NotNull
+    @Column(nullable = false)
     private String category;
 
     @JsonBackReference
@@ -55,9 +51,11 @@ public class Item extends DateAudit {
     @PreUpdate
     @PrePersist
     void updateSearchString() {
-        final String fullSearchString = getTitle() + getDescription() + getPrice() + getContactName() + getContactEmail() + getCategory();
+        final String fullSearchString = getTitle() + getDescription() + getPrice() + getCategory();
         setSearchString(fullSearchString.toLowerCase());
     }
+
+
 
     public String getSearchString() {
         return searchString;
@@ -113,22 +111,6 @@ public class Item extends DateAudit {
         isAvailable = available;
     }
 
-    public String getContactName() {
-        return contactName;
-    }
-
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
-    }
-
     public String getCategory() {
         return category;
     }
@@ -161,11 +143,8 @@ public class Item extends DateAudit {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", isAvailable=" + isAvailable +
-                ", contactName='" + contactName + '\'' +
-                ", contactEmail='" + contactEmail + '\'' +
                 ", category='" + category + '\'' +
                 ", user=" + user +
-                ", images=" + images +
                 '}';
     }
 }

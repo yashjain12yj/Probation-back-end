@@ -35,8 +35,6 @@ public class PostService {
         item.setDescription(createPostDTO.getDescription());
         item.setPrice(Double.parseDouble(createPostDTO.getPrice()));
         item.setAvailable(true);
-        item.setContactName(createPostDTO.getContactName());
-        item.setContactEmail(createPostDTO.getContactEmail());
         item.setCategory(createPostDTO.getCategory());
         Optional<User> user = userService.findByUsernameOrEmail(userInfo.getEmail());
         if (!user.isPresent()) return null;
@@ -66,8 +64,6 @@ public class PostService {
         postDTO.setCategory(item.getCategory());
         postDTO.setPrice(item.getPrice());
         postDTO.setAvailable(item.isAvailable());
-        postDTO.setContactName(item.getContactName());
-        postDTO.setContactEmail(item.getContactEmail());
         postDTO.setCreatedAt(Timestamp.from(item.getCreatedAt()).toString());
         for (Image image : item.getImages())
             postDTO.addImage(image);

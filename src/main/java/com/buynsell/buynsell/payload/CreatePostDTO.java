@@ -9,8 +9,6 @@ public class CreatePostDTO implements Serializable {
     private String description;
     private String category;
     private String price;
-    private String contactName;
-    private String contactEmail;
     private MultipartFile[] images;
 
     public String getTitle() {
@@ -43,22 +41,6 @@ public class CreatePostDTO implements Serializable {
 
     public void setPrice(String price) {
         this.price = price;
-    }
-
-    public String getContactName() {
-        return contactName;
-    }
-
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
     }
 
     public MultipartFile[] getImages() {
