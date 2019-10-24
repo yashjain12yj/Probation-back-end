@@ -32,7 +32,7 @@ public class AuthFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        log.info("########## Initiating AuthFilter filter ##########");
+        log.info("Initiating AuthFilter");
     }
 
     @Override
@@ -40,22 +40,22 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        log.info("########### Authenticating User in AuthFilter ###########");
+        log.info("Authenticating User from AuthFilter");
         try{
             String token = request.getHeader("token");
             String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
             Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail);
             if (!user.isPresent()) {
-                log.info("########## User not logged in or invalid token ##########");
+                log.info("User not logged in or invalid token");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
             } else {
-                log.info("########## User logged ##########");
+                log.info("User logged in");
                 userInfo.setEmail(user.get().getEmail());
                 userInfo.setUsername(user.get().getUsername());
                 filterChain.doFilter(request, response);
             }
         } catch (NullPointerException ex){
-            log.info("########### No Auth token found ###########");
+            log.info("No Auth token found");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token not found");
         }
     }

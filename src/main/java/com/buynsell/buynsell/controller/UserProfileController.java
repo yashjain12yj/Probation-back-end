@@ -1,34 +1,26 @@
 package com.buynsell.buynsell.controller;
 
-import com.buynsell.buynsell.encryption.AuthKeys;
-import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
-import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.ChangePasswordDTO;
 import com.buynsell.buynsell.payload.DashboardDTO;
 import com.buynsell.buynsell.payload.UserInfo;
 import com.buynsell.buynsell.service.UserProfileService;
-import com.buynsell.buynsell.service.UserService;
 import com.buynsell.buynsell.util.UserProfileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/private/user")
-public class UserProfileController {
+public class
+UserProfileController {
 
     @Autowired
     private UserProfileService userProfileService;
 
     @Autowired
     private UserProfileValidator userProfileValidator;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     UserInfo userInfo;

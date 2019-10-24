@@ -1,12 +1,7 @@
 package com.buynsell.buynsell.repository;
 
-import com.buynsell.buynsell.encryption.AESEncryption;
-import com.buynsell.buynsell.encryption.AuthKeys;
-import com.buynsell.buynsell.model.Image;
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
-import com.buynsell.buynsell.payload.ChangePasswordDTO;
-import com.buynsell.buynsell.payload.DashboardDTO;
 import com.buynsell.buynsell.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
+import javax.persistence.Query;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 @Repository
@@ -26,10 +21,9 @@ public class UserProfileRepository {
     private EntityManager entityManager;
 
     @Autowired
-    private AuthKeys authKeys;
-
-    @Autowired
     private UserService userService;
+
+
 
     /**
      * @param user
@@ -48,9 +42,12 @@ public class UserProfileRepository {
     }
 
 
-    public User getDashboard(String username) {
+    public List<Item> getDashboard(String username) {
         Optional<User> user = userService.findByUsernameOrEmail(username);
-        if (!user.isPresent()) return null;
-        return user.get();
+        String hql = "FROM Item item WHERE item.isAvailable = true and item.user.username = :username ORDER BY item.createdAt DESC";
+        Query query = entityManager.createQuery(hql);
+        query.setParameter("username", username);
+        List items = query.getResultList();
+        return items;
     }
 }

@@ -1,9 +1,5 @@
 package com.buynsell.buynsell.controller;
 
-import com.buynsell.buynsell.encryption.AESEncryption;
-import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
-import com.buynsell.buynsell.encryption.AuthKeys;
-import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.AuthenticationTokenResponse;
 import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
@@ -17,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
@@ -32,15 +27,8 @@ public class AuthController {
     @Autowired
     private AuthValidator authValidator;
 
-    @Autowired
-    private AuthKeys authKeys;
-
-    @Autowired
-    private AuthenticationTokenUtil authenticationTokenUtil;
-
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
-        log.info("/signup started");
         ResponseEntity responseEntity = authValidator.validateSignup(signUpRequest);
         if (responseEntity != null)
             return responseEntity;
@@ -55,7 +43,6 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        log.info("/signin started");
         ResponseEntity responseEntity = authValidator.validateSignin(loginRequest);
         if (responseEntity != null)
             return responseEntity;

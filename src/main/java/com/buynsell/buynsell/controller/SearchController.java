@@ -1,12 +1,9 @@
 package com.buynsell.buynsell.controller;
 
-import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
 import com.buynsell.buynsell.payload.SearchRequestDTO;
 import com.buynsell.buynsell.service.SearchService;
-import com.buynsell.buynsell.service.UserService;
 import com.buynsell.buynsell.util.SearchValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,12 +30,11 @@ public class SearchController {
     }
 
     @PostMapping("/searchItems")
-    public ResponseEntity<?> searchItem(SearchRequestDTO searchRequestDTO, @RequestHeader HttpHeaders headers){
-        String searchQuery = headers.get("searchQuery").get(0);
-        ResponseEntity responseEntity = searchValidator.validateSearchQuery(searchQuery);
+    public ResponseEntity<?> searchItem(@RequestBody SearchRequestDTO searchRequestDTO){
+        ResponseEntity responseEntity = searchValidator.validateSearchQuery(searchRequestDTO);
         if (responseEntity != null)
             return responseEntity;
-        List items = searchService.getSearchResult(searchQuery);
+        List items = searchService.getSearchResult(searchRequestDTO);
         if (items == null){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No content found");
         }

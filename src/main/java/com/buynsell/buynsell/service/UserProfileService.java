@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -43,19 +44,18 @@ public class UserProfileService {
     }
 
     public DashboardDTO getDashboard(){
-        User user = userProfileRepository.getDashboard(userInfo.getUsername());
-        if (user == null) return null;
+        List<Item> items = userProfileRepository.getDashboard(userInfo.getUsername());
         DashboardDTO dashboardDTO = new DashboardDTO();
-        ArrayList<Item> items = new ArrayList<>();
-        for(Item item: user.getItems()){
+        ArrayList<Item> newItems = new ArrayList<>();
+        for(Item item: items){
             item.setUser(null);
             Set<Image> images;
             images = item.getImages();
             for(Image image : images)
                 image.setItem(null);
-            items.add(item);
+            newItems.add(item);
         }
-        dashboardDTO.setItems(items);
+        dashboardDTO.setItems(newItems);
         return dashboardDTO;
     }
 

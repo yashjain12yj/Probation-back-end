@@ -2,8 +2,6 @@ package com.buynsell.buynsell.util;
 
 import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
-import com.buynsell.buynsell.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -14,9 +12,6 @@ import java.util.regex.Pattern;
 
 @Component
 public class AuthValidator {
-
-    @Autowired
-    private UserService userService;
 
     public ResponseEntity validateSignin(LoginRequest loginRequest) {
         if (loginRequest.getUsernameOrEmail() == null || loginRequest.getUsernameOrEmail().trim().equals(""))

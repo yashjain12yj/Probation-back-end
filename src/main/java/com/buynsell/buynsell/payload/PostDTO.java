@@ -3,8 +3,6 @@ package com.buynsell.buynsell.payload;
 import com.buynsell.buynsell.model.Image;
 import com.buynsell.buynsell.model.User;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 

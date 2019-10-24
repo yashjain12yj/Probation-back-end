@@ -4,13 +4,10 @@ import com.buynsell.buynsell.encryption.AESEncryption;
 import com.buynsell.buynsell.encryption.AuthKeys;
 import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
 import com.buynsell.buynsell.model.User;
-import com.buynsell.buynsell.payload.AuthenticationTokenResponse;
 import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
 import com.buynsell.buynsell.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
