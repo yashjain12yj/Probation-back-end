@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController
@@ -48,30 +49,26 @@ public class PostController {
     }
 
     @PostMapping("/private/post/markSold")
-    public ResponseEntity<?> markSold(@RequestHeader("itemId") String itemId) {
-        long id;
-        try {
-            id = Long.parseLong(itemId);
-        } catch (NumberFormatException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid item id");
-        }
-        boolean flag = postService.markSold(id);
+    public ResponseEntity<?> markSold(@RequestBody Map<String, Long> keyVsValueMap) {
+        boolean flag = postService.markSold(keyVsValueMap.get("id"));
         if (!flag)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
         return ResponseEntity.status(HttpStatus.OK).body("Changed Availability");
     }
 
     @PostMapping("/private/post/markAvailable")
-    public ResponseEntity<?> markAvailable(@RequestHeader("itemId") String itemId) {
-        long id;
-        try {
-            id = Long.parseLong(itemId);
-        } catch (NumberFormatException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong item id");
-        }
-        boolean flag = postService.markAvailable(id);
+    public ResponseEntity<?> markAvailable(@RequestBody Map<String, Long> keyVsValueMap) {
+        boolean flag = postService.markAvailable(keyVsValueMap.get("id"));
         if (!flag)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
         return ResponseEntity.status(HttpStatus.OK).body("Changed Availability");
+    }
+
+    @PostMapping("/private/post/delete")
+    public ResponseEntity<?> deletePost(@RequestBody Map<String, Long> keyVsValueMap) {
+        boolean flag = postService.deletePost(keyVsValueMap.get("id"));
+        if (!flag)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully");
     }
 }

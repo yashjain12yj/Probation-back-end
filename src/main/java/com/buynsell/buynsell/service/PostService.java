@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.Optional;
 
 @Service
@@ -81,5 +80,8 @@ public class PostService {
 
     public boolean markAvailable(long itemId) {
         return postRepository.markAvailable(userInfo.getUsername(), itemId);
+    }
+    public boolean deletePost(long itemId) {
+        return postRepository.deletePost(userInfo.getUsername(), itemId);
     }
 }

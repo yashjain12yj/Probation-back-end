@@ -44,7 +44,7 @@ public class UserProfileRepository {
 
     public List<Item> getDashboard(String username) {
         Optional<User> user = userService.findByUsernameOrEmail(username);
-        String hql = "FROM Item item WHERE item.isAvailable = true and item.user.username = :username ORDER BY item.createdAt DESC";
+        String hql = "FROM Item item WHERE item.user.username = :username ORDER BY item.createdAt DESC";
         Query query = entityManager.createQuery(hql);
         query.setParameter("username", username);
         List items = query.getResultList();

@@ -60,4 +60,20 @@ public class PostRepository {
         item.setAvailable(true);
         return true;
     }
+
+    @Transactional
+    public boolean deletePost(String username, long itemId){
+        Item item = entityManager.find(Item.class, itemId);
+        if (item == null)
+            return false;
+        if (!item.getUser().getUsername().equals(username))
+            return false;
+        try{
+            entityManager.remove(item);
+        }catch (IllegalArgumentException ex){
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }
