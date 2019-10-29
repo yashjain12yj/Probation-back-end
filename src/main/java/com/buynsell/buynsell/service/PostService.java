@@ -4,6 +4,7 @@ import com.buynsell.buynsell.model.Image;
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.CreatePostDTO;
+import com.buynsell.buynsell.payload.EditItemDTO;
 import com.buynsell.buynsell.payload.PostDTO;
 import com.buynsell.buynsell.payload.UserInfo;
 import com.buynsell.buynsell.repository.PostRepository;
@@ -84,4 +85,30 @@ public class PostService {
     public boolean deletePost(long itemId) {
         return postRepository.deletePost(userInfo.getUsername(), itemId);
     }
+
+    public boolean editPost(EditItemDTO editItemDTO){
+        Long id = editItemDTO.getId();
+        Item item = postRepository.getItem(id);
+        if(!item.getUser().getUsername().equals(userInfo.getUsername())) return false;
+
+        item.setTitle(editItemDTO.getTitle());
+        item.setDescription(editItemDTO.getDescription());
+        item.setCategory(editItemDTO.getCategory());
+        item.setPrice(Double.parseDouble(editItemDTO.getPrice()));
+        if (editItemDTO.getImages()!=null){
+            for (int i = 0; i < editItemDTO.getImages().length; i++) {
+                Image image = new Image();
+                try {
+                    image.setData(editItemDTO.getImages()[i].getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                image.setItem(item);
+                item.addImage(image);
+            }
+        }
+        return postRepository.editPost(userInfo.getUsername(), item);
+    }
+
 }

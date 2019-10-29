@@ -2,6 +2,7 @@ package com.buynsell.buynsell.controller;
 
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.payload.CreatePostDTO;
+import com.buynsell.buynsell.payload.EditItemDTO;
 import com.buynsell.buynsell.payload.PostDTO;
 import com.buynsell.buynsell.payload.UserInfo;
 import com.buynsell.buynsell.service.PostService;
@@ -70,5 +71,18 @@ public class PostController {
         if (!flag)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
         return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully");
+    }
+
+    @PostMapping(value = "/private/post/edit", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> editPost( EditItemDTO editItemDTO){
+        ResponseEntity re = postValidator.validateEditPost(editItemDTO);
+        if (re != null)
+            return re;
+
+        boolean res = postService.editPost(editItemDTO);
+        if (res){
+            return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
     }
 }

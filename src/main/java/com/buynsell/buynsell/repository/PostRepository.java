@@ -76,4 +76,19 @@ public class PostRepository {
         }
         return true;
     }
+
+    @Transactional
+    public boolean editPost(String username, Item item){
+        if (item == null)
+            return false;
+        if (!item.getUser().getUsername().equals(username))
+            return false;
+        try{
+            entityManager.merge(item);
+        }catch (IllegalArgumentException ex){
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }
