@@ -19,4 +19,12 @@ public class AuthKeys {
     public String getTokenSecretKey() {
         return tokenSecretKey;
     }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public void setTokenSecretKey(String tokenSecretKey) {
+        this.tokenSecretKey = tokenSecretKey;
+    }
 }

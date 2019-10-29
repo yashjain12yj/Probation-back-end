@@ -10,6 +10,14 @@ public class UserInfo {
     private String email;
     private String username;
 
+    public UserInfo(String email, String username) {
+        this.email = email;
+        this.username = username;
+    }
+
+    public UserInfo() {
+    }
+
     public String getEmail() {
         return email;
     }

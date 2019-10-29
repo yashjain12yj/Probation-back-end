@@ -23,8 +23,6 @@ public class UserProfileRepository {
     @Autowired
     private UserService userService;
 
-
-
     /**
      * @param user
      * @return -1 if database error, 1 if successfully changed password, 0 if password doesn't match.

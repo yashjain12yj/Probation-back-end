@@ -37,6 +37,7 @@ public class UserRepository {
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
+        System.out.println("Getting Data from database");
         Query query = em.createQuery("SELECT u FROM User u WHERE u.username = :username or u.email = :email");
         query.setParameter("username", usernameOrEmail.toLowerCase());
         query.setParameter("email",usernameOrEmail.toLowerCase());
@@ -46,33 +47,6 @@ public class UserRepository {
         return Optional.of(resultList.get(0));
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Optional<User> findById(Long userId) {
-        User user = em.find(User.class, userId);
-        if (user == null)
-            return Optional.empty();
-        return Optional.of(user);
-    }
-
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Optional<User> findByEmail(String email) {
-        Query query = em.createQuery("SELECT u FROM User u WHERE u.email = :email");
-        query.setParameter("email", email.toLowerCase());
-        List<User> resultList = query.getResultList();
-        if (resultList.size() == 0)
-            return Optional.empty();
-        return Optional.of(resultList.get(0));
-    }
-
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Optional<User> findByUsername(String username) {
-        Query query = em.createQuery("SELECT u FROM User u WHERE u.username = :username");
-        query.setParameter("username", username.toLowerCase());
-        List<User> resultList = query.getResultList();
-        if (resultList.size() == 0)
-            return Optional.empty();
-        return Optional.of(resultList.get(0));
-    }
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Boolean existsByUsername(String username) {

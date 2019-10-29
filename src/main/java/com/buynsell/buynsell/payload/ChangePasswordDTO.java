@@ -5,6 +5,15 @@ public class ChangePasswordDTO {
     private String newPassword;
     private String confirmNewPassword;
 
+    public ChangePasswordDTO(String oldPassword, String newPassword, String confirmNewPassword) {
+        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
+        this.confirmNewPassword = confirmNewPassword;
+    }
+
+    public ChangePasswordDTO() {
+    }
+
     public String getConfirmNewPassword() {
         return confirmNewPassword;
     }

@@ -51,6 +51,15 @@ public class User extends DateAudit {
     public User() {
     }
 
+    public User(@NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username, @NotBlank @Size(max = 40) @Email String email, @NotBlank @Size(max = 100) String password, @NotNull boolean isActive, Set<Item> items) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.isActive = isActive;
+        this.items = items;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
