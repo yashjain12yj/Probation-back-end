@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
@@ -32,9 +33,9 @@ public class PostController {
 
     @PostMapping(value = "/private/post/", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createPost(@Valid CreatePostDTO createPostDTO) {
-        ResponseEntity responseEntity = postValidator.validateCreatePost(createPostDTO);
-        if (responseEntity != null)
-            return responseEntity;
+        Optional<String> re = postValidator.validateCreatePost(createPostDTO);
+        if (re.isPresent())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.get());
         Item item = postService.createPost(createPostDTO);
         if (item == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Some Error Occurred, Retry!");
@@ -43,10 +44,10 @@ public class PostController {
 
     @GetMapping(value = "/post/{itemId}")
     public ResponseEntity<?> getItem(@PathVariable Long itemId) {
-        PostDTO postDTO = postService.getItem(itemId);
-        if (postDTO == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Item Not found/ Error");
-        return ResponseEntity.status(HttpStatus.OK).body(postDTO);
+        Optional<PostDTO> postDTO = postService.getItem(itemId);
+        if (postDTO.isPresent())
+            return ResponseEntity.status(HttpStatus.OK).body(postDTO);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Item Not found/ Error");
     }
 
     @PostMapping("/private/post/markSold")
@@ -74,13 +75,13 @@ public class PostController {
     }
 
     @PostMapping(value = "/private/post/edit", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> editPost( EditItemDTO editItemDTO){
-        ResponseEntity re = postValidator.validateEditPost(editItemDTO);
-        if (re != null)
-            return re;
+    public ResponseEntity<?> editPost(EditItemDTO editItemDTO) {
+        Optional<String> re = postValidator.validateEditPost(editItemDTO);
+        if (re.isPresent())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.get());
 
         boolean res = postService.editPost(editItemDTO);
-        if (res){
+        if (res) {
             return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");

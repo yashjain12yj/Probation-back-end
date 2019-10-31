@@ -30,14 +30,16 @@ UserProfileController {
         ResponseEntity responseEntity = userProfileValidator.changePasswordValidator(changePasswordDTO);
         if (responseEntity != null)
             return responseEntity;
-        int res = userProfileService.changePassword(changePasswordDTO);
-        if (res == 1)
-            return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
-        else if (res == 0)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your current password is wrong!");
-        else
+        int res = 0;
+        try {
+            res = userProfileService.changePassword(changePasswordDTO);
+            if (res == 0)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your current password is wrong!");
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
-
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
     }
 
     @GetMapping("/dashboard")

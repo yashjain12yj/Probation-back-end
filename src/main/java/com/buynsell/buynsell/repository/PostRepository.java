@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Optional;
 
 @Repository
 public class PostRepository {
@@ -27,16 +28,16 @@ public class PostRepository {
         }
     }
 
-    public Item getItem(Long itemId) {
+    public Optional<Item> getItem(Long itemId) {
         Item item;
         try {
             item = entityManager.find(Item.class, itemId);
         } catch (Exception ex) {
-            return null;
+            return Optional.empty();
         }
         if (item == null)
-            return null;
-        return item;
+            return Optional.empty();
+        return Optional.of(item);
     }
 
     @Transactional

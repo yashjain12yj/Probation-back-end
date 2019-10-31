@@ -4,7 +4,6 @@ import com.buynsell.buynsell.model.Image;
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.PostDTO;
-import com.buynsell.buynsell.payload.UserInfo;
 import com.buynsell.buynsell.repository.PostRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Optional;
 
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 
@@ -39,9 +38,9 @@ public class PostServiceTest {
 
     @Test
     public void getItem() {
-        Mockito.when(postRepository.getItem(expectedItem.getId())).thenReturn(expectedItem);
-        PostDTO postDTO = postService.getItem(expectedItem.getId());
-        assertEquals("Check if expected item is equal to actual item", expectedItem.getId(), postDTO.getId());
+        Mockito.when(postRepository.getItem(expectedItem.getId()).get()).thenReturn(expectedItem);
+        Optional<PostDTO> postDTO = postService.getItem(expectedItem.getId());
+        assertEquals("Check if expected item is equal to actual item", expectedItem.getId(), postDTO.get().getId());
     }
 
     @Test

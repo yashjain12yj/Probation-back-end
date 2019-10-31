@@ -1,6 +1,5 @@
 package com.buynsell.buynsell.repository;
 
-import com.buynsell.buynsell.aop.AopInAction;
 import com.buynsell.buynsell.model.Item;
 import org.junit.After;
 import org.junit.Before;
@@ -10,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -36,8 +36,8 @@ public class PostRepositoryTest {
     @Test
     public void getItem() {
         LOG.info("PostRepositoryTest.getItem() Begin");
-        Item expected = postRepository.getItem(actual.getId());
-        assertEquals("Fetching Item by Id",actual.getId(),expected.getId());
+        Optional<Item> expected = postRepository.getItem(actual.getId());
+        assertEquals("Fetching Item by Id",actual.getId(),expected.get().getId());
         LOG.info("PostRepositoryTest.getItem() End");
     }
 

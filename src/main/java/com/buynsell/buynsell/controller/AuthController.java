@@ -36,8 +36,12 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken!");
         else if (userService.existsByEmail(signUpRequest.getEmail()))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email Address already in use!");
-        if (userService.save(signUpRequest) == null)
+        try {
+            userService.save(signUpRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
         return ResponseEntity.status(HttpStatus.OK).body("Successfully Registered");
     }
 

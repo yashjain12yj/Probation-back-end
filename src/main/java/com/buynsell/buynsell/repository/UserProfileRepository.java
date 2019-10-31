@@ -24,19 +24,14 @@ public class UserProfileRepository {
     private UserService userService;
 
     /**
+     *
      * @param user
-     * @return -1 if database error, 1 if successfully changed password, 0 if password doesn't match.
+     * @param newPassword
+     * @throws Exception
      */
     @Transactional
-    public int changePassword(User user, String newPassword) {
-        try {
-            user.setPassword(newPassword);
-            entityManager.merge(user);
-            return 1;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return -1;
-        }
+    public void changePassword(User user, String newPassword) throws Exception {
+        user.setPassword(newPassword);
     }
 
 

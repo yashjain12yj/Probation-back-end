@@ -11,7 +11,6 @@ import com.buynsell.buynsell.payload.UserInfo;
 import com.buynsell.buynsell.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +32,13 @@ public class UserProfileService {
     @Autowired
     private UserService userService;
 
-    @Transactional
-    public int changePassword(ChangePasswordDTO changePasswordDTO){
+    public int changePassword(ChangePasswordDTO changePasswordDTO) throws Exception {
         Optional<User> user = userService.findByUsernameOrEmail(userInfo.getEmail());
         if (!user.isPresent()) return -1;
 
         if(!user.get().getPassword().equals(AESEncryption.encrypt(changePasswordDTO.getOldPassword(), authKeys.getSecretKey()))) return 0;
-
-        return userProfileRepository.changePassword(user.get(), AESEncryption.encrypt(changePasswordDTO.getNewPassword(), authKeys.getSecretKey()));
+        userProfileRepository.changePassword(user.get(), AESEncryption.encrypt(changePasswordDTO.getNewPassword(), authKeys.getSecretKey()));
+        return 1;
     }
 
     public DashboardDTO getDashboard(){

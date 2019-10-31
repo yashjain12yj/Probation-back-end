@@ -51,7 +51,7 @@ public class AuthValidator {
         if (password == null || password.trim().equals(""))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password required");
         else if (password.trim().length() < 8 || password.trim().length() > 20)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be 6 to 20 characters long");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be 8 to 20 characters long");
         boolean hasLower = false, hasUpper = false, hasDigit = false, hasSpecialCHr = false;
         for (char c : password.toCharArray()) {
             if (Character.isDigit(c))

@@ -27,7 +27,7 @@ public class UserService {
         return userRepository.findByUsernameOrEmail(usernameOrEmail);
     }
 
-    public String checkAuth(LoginRequest loginRequest){
+    public String checkAuth(LoginRequest loginRequest) {
         loginRequest.setPassword(AESEncryption.encrypt(loginRequest.getPassword(), authKeys.getSecretKey()));
         Optional<User> user = findByUsernameOrEmail(loginRequest.getUsernameOrEmail());
         if (!user.isPresent())
@@ -46,18 +46,14 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public User save(SignUpRequest signUpRequest) {
-        try{
-            User user = new User();
-            user.setName(signUpRequest.getName());
-            user.setUsername(signUpRequest.getUsername().toLowerCase());
-            user.setEmail(signUpRequest.getEmail().toLowerCase());
-            user.setPassword(AESEncryption.encrypt(signUpRequest.getPassword(), authKeys.getSecretKey()));
-            user.setActive(true);
-            return userRepository.save(user);
-        }catch (Exception ex){
-            return null;
-        }
+    public void save(SignUpRequest signUpRequest) throws Exception {
+        User user = new User();
+        user.setName(signUpRequest.getName());
+        user.setUsername(signUpRequest.getUsername().toLowerCase());
+        user.setEmail(signUpRequest.getEmail().toLowerCase());
+        user.setPassword(AESEncryption.encrypt(signUpRequest.getPassword(), authKeys.getSecretKey()));
+        user.setActive(true);
+        userRepository.save(user);
     }
 
 }

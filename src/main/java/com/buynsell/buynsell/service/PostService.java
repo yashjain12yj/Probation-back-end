@@ -54,25 +54,25 @@ public class PostService {
         return postRepository.createPost(item);
     }
 
-    public PostDTO getItem(Long itemId) {
-        Item item = postRepository.getItem(itemId);
-        if (item == null) return null;
+    public Optional<PostDTO> getItem(Long itemId) {
+        Optional<Item> item = postRepository.getItem(itemId);
+        if (!item.isPresent()) return Optional.empty();
         PostDTO postDTO = new PostDTO();
-        postDTO.setId(item.getId());
-        postDTO.setTitle(item.getTitle());
-        postDTO.setDescription(item.getDescription());
-        postDTO.setCategory(item.getCategory());
-        postDTO.setPrice(item.getPrice());
-        postDTO.setAvailable(item.isAvailable());
-        postDTO.setCreatedAt(Timestamp.from(item.getCreatedAt()).toString());
-        for (Image image : item.getImages())
+        postDTO.setId(item.get().getId());
+        postDTO.setTitle(item.get().getTitle());
+        postDTO.setDescription(item.get().getDescription());
+        postDTO.setCategory(item.get().getCategory());
+        postDTO.setPrice(item.get().getPrice());
+        postDTO.setAvailable(item.get().isAvailable());
+        postDTO.setCreatedAt(Timestamp.from(item.get().getCreatedAt()).toString());
+        for (Image image : item.get().getImages())
             postDTO.addImage(image);
         User user = new User();
-        user.setName(item.getUser().getName());
-        user.setUsername(item.getUser().getUsername());
-        user.setEmail(item.getUser().getEmail());
+        user.setName(item.get().getUser().getName());
+        user.setUsername(item.get().getUser().getUsername());
+        user.setEmail(item.get().getUser().getEmail());
         postDTO.setUser(user);
-        return postDTO;
+        return Optional.of(postDTO);
     }
 
     public boolean markSold(long itemId) {
@@ -82,20 +82,22 @@ public class PostService {
     public boolean markAvailable(long itemId) {
         return postRepository.markAvailable(userInfo.getUsername(), itemId);
     }
+
     public boolean deletePost(long itemId) {
         return postRepository.deletePost(userInfo.getUsername(), itemId);
     }
 
-    public boolean editPost(EditItemDTO editItemDTO){
+    public boolean editPost(EditItemDTO editItemDTO) {
         Long id = editItemDTO.getId();
-        Item item = postRepository.getItem(id);
-        if(!item.getUser().getUsername().equals(userInfo.getUsername())) return false;
+        Optional<Item> optItem = postRepository.getItem(id);
 
+        if (!optItem.isPresent() || !optItem.get().getUser().getUsername().equals(userInfo.getUsername())) return false;
+        Item item = optItem.get();
         item.setTitle(editItemDTO.getTitle());
         item.setDescription(editItemDTO.getDescription());
         item.setCategory(editItemDTO.getCategory());
         item.setPrice(Double.parseDouble(editItemDTO.getPrice()));
-        if (editItemDTO.getImages()!=null){
+        if (editItemDTO.getImages() != null) {
             for (int i = 0; i < editItemDTO.getImages().length; i++) {
                 Image image = new Image();
                 try {
