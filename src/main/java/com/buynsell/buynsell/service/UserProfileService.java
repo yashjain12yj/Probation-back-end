@@ -41,7 +41,7 @@ public class UserProfileService {
         return 1;
     }
 
-    public DashboardDTO getDashboard(){
+    public DashboardDTO getDashboard() throws Exception {
         List<Item> items = userProfileRepository.getDashboard(userInfo.getUsername());
         DashboardDTO dashboardDTO = new DashboardDTO();
         ArrayList<Item> newItems = new ArrayList<>();

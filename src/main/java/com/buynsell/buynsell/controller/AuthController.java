@@ -50,11 +50,15 @@ public class AuthController {
         ResponseEntity responseEntity = authValidator.validateSignin(loginRequest);
         if (responseEntity != null)
             return responseEntity;
-        String token = userService.checkAuth(loginRequest);
-
-        if (token == null || token.equals("")){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        String token = null;
+        try {
+            token = userService.checkAuth(loginRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        if (token == null || token.equals(""))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(token));
     }
 }

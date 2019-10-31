@@ -14,34 +14,22 @@ public class PostRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @Transactional
-    public Item createPost(Item item) {
-        try{
-            entityManager.persist(item);
-            return item;
-        }catch (Exception ex){
-            ex.printStackTrace();
-            return null;
-        }
+    public Item createPost(Item item) throws Exception {
+        entityManager.persist(item);
+        return item;
     }
 
-    public Optional<Item> getItem(Long itemId) {
+    public Optional<Item> getItem(Long itemId) throws Exception {
         Item item;
-        try {
-            item = entityManager.find(Item.class, itemId);
-        } catch (Exception ex) {
-            return Optional.empty();
-        }
+        item = entityManager.find(Item.class, itemId);
         if (item == null)
             return Optional.empty();
         return Optional.of(item);
     }
 
     @Transactional
-    public boolean markSold(String username, long itemId){
+    public boolean markSold(String username, long itemId) throws Exception{
         Item item = entityManager.find(Item.class, itemId);
         if (item == null)
             return false;
@@ -52,7 +40,7 @@ public class PostRepository {
     }
 
     @Transactional
-    public boolean markAvailable(String username, long itemId){
+    public boolean markAvailable(String username, long itemId) throws Exception{
         Item item = entityManager.find(Item.class, itemId);
         if (item == null)
             return false;
@@ -63,33 +51,23 @@ public class PostRepository {
     }
 
     @Transactional
-    public boolean deletePost(String username, long itemId){
+    public boolean deletePost(String username, long itemId) throws Exception{
         Item item = entityManager.find(Item.class, itemId);
         if (item == null)
             return false;
         if (!item.getUser().getUsername().equals(username))
             return false;
-        try{
-            entityManager.remove(item);
-        }catch (IllegalArgumentException ex){
-            ex.printStackTrace();
-            return false;
-        }
+        entityManager.remove(item);
         return true;
     }
 
     @Transactional
-    public boolean editPost(String username, Item item){
+    public boolean editPost(String username, Item item) throws Exception{
         if (item == null)
             return false;
         if (!item.getUser().getUsername().equals(username))
             return false;
-        try{
-            entityManager.merge(item);
-        }catch (IllegalArgumentException ex){
-            ex.printStackTrace();
-            return false;
-        }
+        entityManager.merge(item);
         return true;
     }
 }

@@ -23,29 +23,13 @@ public class AESEncryption {
      * @param text is a string
      * @return the encrypted string
      */
-    public static String encrypt(String text, String secretKey) {
+    public static String encrypt(String text, String secretKey) throws Exception {
         Key key = new SecretKeySpec(secretKey.getBytes(), ALGO);
         Cipher c = null;
-        try {
-            c = Cipher.getInstance(ALGO);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        }
-        try {
-            c.init(Cipher.ENCRYPT_MODE, key);
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
+        c = Cipher.getInstance(ALGO);
+        c.init(Cipher.ENCRYPT_MODE, key);
         byte[] encVal = new byte[0];
-        try {
-            encVal = c.doFinal(text.getBytes());
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        }
+        encVal = c.doFinal(text.getBytes());
         return Base64.getEncoder().encodeToString(encVal);
     }
 
@@ -55,30 +39,14 @@ public class AESEncryption {
      * @param encryptedData is a string
      * @return the decrypted string
      */
-    public static String decrypt(String encryptedData , String secretKey)  {
+    public static String decrypt(String encryptedData, String secretKey) throws Exception {
         Key key = new SecretKeySpec(secretKey.getBytes(), ALGO);
         Cipher c = null;
-        try {
-            c = Cipher.getInstance(ALGO);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        }
-        try {
-            c.init(Cipher.DECRYPT_MODE, key);
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
+        c = Cipher.getInstance(ALGO);
+        c.init(Cipher.DECRYPT_MODE, key);
         byte[] decordedValue = Base64.getDecoder().decode(encryptedData);
         byte[] decValue = new byte[0];
-        try {
-            decValue = c.doFinal(decordedValue);
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        }
+        decValue = c.doFinal(decordedValue);
         return new String(decValue);
     }
 
@@ -90,8 +58,17 @@ public class AESEncryption {
 
         System.out.println("Plain test: " + text);
 
-        String encryptedText = encrypt(text, key);
+        String encryptedText = null;
+        try {
+            encryptedText = encrypt(text, key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println("Encrypted text: " + encryptedText);
-        System.out.println("Decrypted text: " + decrypt(encryptedText, key));
+        try {
+            System.out.println("Decrypted text: " + decrypt(encryptedText, key));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

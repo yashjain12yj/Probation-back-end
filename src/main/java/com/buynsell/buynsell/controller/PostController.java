@@ -36,31 +36,53 @@ public class PostController {
         Optional<String> re = postValidator.validateCreatePost(createPostDTO);
         if (re.isPresent())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.get());
-        Item item = postService.createPost(createPostDTO);
-        if (item == null)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Some Error Occurred, Retry!");
+        Item item = null;
+        try {
+            item = postService.createPost(createPostDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
         return ResponseEntity.status(HttpStatus.OK).body(item.getId());
     }
 
     @GetMapping(value = "/post/{itemId}")
     public ResponseEntity<?> getItem(@PathVariable Long itemId) {
-        Optional<PostDTO> postDTO = postService.getItem(itemId);
+        Optional<PostDTO> postDTO = null;
+        try {
+            postDTO = postService.getItem(itemId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
         if (postDTO.isPresent())
             return ResponseEntity.status(HttpStatus.OK).body(postDTO);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Item Not found/ Error");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Item Not found");
     }
 
     @PostMapping("/private/post/markSold")
     public ResponseEntity<?> markSold(@RequestBody Map<String, Long> keyVsValueMap) {
-        boolean flag = postService.markSold(keyVsValueMap.get("id"));
+        boolean flag = false;
+        try {
+            flag = postService.markSold(keyVsValueMap.get("id"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
         if (!flag)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
-        return ResponseEntity.status(HttpStatus.OK).body("Changed Availability");
+        return ResponseEntity.status(HttpStatus.OK).body("Marked Sold!");
     }
 
     @PostMapping("/private/post/markAvailable")
     public ResponseEntity<?> markAvailable(@RequestBody Map<String, Long> keyVsValueMap) {
-        boolean flag = postService.markAvailable(keyVsValueMap.get("id"));
+        boolean flag = false;
+        try {
+            flag = postService.markAvailable(keyVsValueMap.get("id"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
         if (!flag)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
         return ResponseEntity.status(HttpStatus.OK).body("Changed Availability");
@@ -68,7 +90,13 @@ public class PostController {
 
     @PostMapping("/private/post/delete")
     public ResponseEntity<?> deletePost(@RequestBody Map<String, Long> keyVsValueMap) {
-        boolean flag = postService.deletePost(keyVsValueMap.get("id"));
+        boolean flag = false;
+        try {
+            flag = postService.deletePost(keyVsValueMap.get("id"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
         if (!flag)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
         return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully");
@@ -80,10 +108,13 @@ public class PostController {
         if (re.isPresent())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.get());
 
-        boolean res = postService.editPost(editItemDTO);
-        if (res) {
-            return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully");
+        boolean res = false;
+        try {
+            res = postService.editPost(editItemDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
+        return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully");
     }
 }

@@ -13,11 +13,11 @@ public class SearchService {
     @Autowired
     private SearchRepository searchRepository;
 
-    public List getRecentItems(){
+    public List getRecentItems() throws Exception {
         return searchRepository.getRecentItems();
     }
 
-    public List<Item> getSearchResult(SearchRequestDTO searchRequestDTO){
+    public List<Item> getSearchResult(SearchRequestDTO searchRequestDTO) throws Exception {
         return searchRepository.getSearchResult(searchRequestDTO.getSearchQuery());
     }
 }

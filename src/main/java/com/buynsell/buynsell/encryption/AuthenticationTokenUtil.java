@@ -20,15 +20,15 @@ public class AuthenticationTokenUtil {
     @Autowired
     private AuthenticationTokenUtil authenticationTokenUtil;
 
-    public String generateToken(String usernameOrEmail, String secretKey){
+    public String generateToken(String usernameOrEmail, String secretKey) throws Exception {
         return AESEncryption.encrypt(usernameOrEmail, secretKey);
     }
 
-    public String getUsernameOrEmailFromToken(String token, String secretKey){
+    public String getUsernameOrEmailFromToken(String token, String secretKey) throws Exception {
         return AESEncryption.decrypt(token, secretKey);
     }
 
-    public Optional<User> getUserFromHeader(HttpHeaders headers){
+    public Optional<User> getUserFromHeader(HttpHeaders headers) throws Exception {
         if (headers.get("token") != null || headers.containsKey("token")) {
             String token = headers.get("token").get(0);
             String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());

@@ -22,22 +22,33 @@ public class SearchController {
 
     @GetMapping("/recentitems")
     public ResponseEntity<?> getRecentItems() {
-        List items = searchService.getRecentItems();
-        if (items == null){
+        List items = null;
+        try {
+            items = searchService.getRecentItems();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        if (items == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No content found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
 
     @PostMapping("/searchItems")
-    public ResponseEntity<?> searchItem(@RequestBody SearchRequestDTO searchRequestDTO){
+    public ResponseEntity<?> searchItem(@RequestBody SearchRequestDTO searchRequestDTO) {
         ResponseEntity responseEntity = searchValidator.validateSearchQuery(searchRequestDTO);
         if (responseEntity != null)
             return responseEntity;
-        List items = searchService.getSearchResult(searchRequestDTO);
-        if (items == null){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No content found");
+        List items = null;
+        try {
+            items = searchService.getSearchResult(searchRequestDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+        if (items == null)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No content found");
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }
 }

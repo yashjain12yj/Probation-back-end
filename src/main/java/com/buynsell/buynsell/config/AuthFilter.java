@@ -43,6 +43,7 @@ public class AuthFilter implements Filter {
         log.info("Authenticating User from AuthFilter");
         try{
             String token = request.getHeader("token");
+
             String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
             Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail);
             if (!user.isPresent()) {
@@ -56,7 +57,11 @@ public class AuthFilter implements Filter {
             }
         } catch (NullPointerException ex){
             log.info("No Auth token found");
+            ex.printStackTrace();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token not found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 

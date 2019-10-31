@@ -29,7 +29,7 @@ public class PostService {
     UserService userService;
 
     @Transactional
-    public Item createPost(CreatePostDTO createPostDTO) {
+    public Item createPost(CreatePostDTO createPostDTO) throws Exception {
         Item item = new Item();
         item.setTitle(createPostDTO.getTitle());
         item.setDescription(createPostDTO.getDescription());
@@ -42,19 +42,14 @@ public class PostService {
         user.get().addItem(item);
         for (int i = 0; i < createPostDTO.getImages().length; i++) {
             Image image = new Image();
-            try {
-                image.setData(createPostDTO.getImages()[i].getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
+            image.setData(createPostDTO.getImages()[i].getBytes());
             image.setItem(item);
             item.addImage(image);
         }
         return postRepository.createPost(item);
     }
 
-    public Optional<PostDTO> getItem(Long itemId) {
+    public Optional<PostDTO> getItem(Long itemId) throws Exception {
         Optional<Item> item = postRepository.getItem(itemId);
         if (!item.isPresent()) return Optional.empty();
         PostDTO postDTO = new PostDTO();
@@ -75,19 +70,19 @@ public class PostService {
         return Optional.of(postDTO);
     }
 
-    public boolean markSold(long itemId) {
+    public boolean markSold(long itemId) throws Exception {
         return postRepository.markSold(userInfo.getUsername(), itemId);
     }
 
-    public boolean markAvailable(long itemId) {
+    public boolean markAvailable(long itemId) throws Exception {
         return postRepository.markAvailable(userInfo.getUsername(), itemId);
     }
 
-    public boolean deletePost(long itemId) {
+    public boolean deletePost(long itemId) throws Exception {
         return postRepository.deletePost(userInfo.getUsername(), itemId);
     }
 
-    public boolean editPost(EditItemDTO editItemDTO) {
+    public boolean editPost(EditItemDTO editItemDTO) throws Exception {
         Long id = editItemDTO.getId();
         Optional<Item> optItem = postRepository.getItem(id);
 
@@ -100,12 +95,7 @@ public class PostService {
         if (editItemDTO.getImages() != null) {
             for (int i = 0; i < editItemDTO.getImages().length; i++) {
                 Image image = new Image();
-                try {
-                    image.setData(editItemDTO.getImages()[i].getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
+                image.setData(editItemDTO.getImages()[i].getBytes());
                 image.setItem(item);
                 item.addImage(image);
             }

@@ -44,7 +44,13 @@ UserProfileController {
 
     @GetMapping("/dashboard")
     public ResponseEntity<?> getDashboard() {
-        DashboardDTO dashboardDTO = userProfileService.getDashboard();
+        DashboardDTO dashboardDTO = null;
+        try {
+            dashboardDTO = userProfileService.getDashboard();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
         if (dashboardDTO == null)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         return ResponseEntity.status(HttpStatus.OK).body(dashboardDTO);

@@ -27,7 +27,7 @@ public class UserService {
         return userRepository.findByUsernameOrEmail(usernameOrEmail);
     }
 
-    public String checkAuth(LoginRequest loginRequest) {
+    public String checkAuth(LoginRequest loginRequest) throws Exception {
         loginRequest.setPassword(AESEncryption.encrypt(loginRequest.getPassword(), authKeys.getSecretKey()));
         Optional<User> user = findByUsernameOrEmail(loginRequest.getUsernameOrEmail());
         if (!user.isPresent())
