@@ -1,7 +1,6 @@
 package com.buynsell.buynsell.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -41,8 +40,7 @@ public class Item extends DateAudit {
     @ManyToOne
     private User user;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Image> images;
 
     @Column(name = "SEARCH_STRING", length = 4000)

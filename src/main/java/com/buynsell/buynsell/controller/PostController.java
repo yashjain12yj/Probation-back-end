@@ -88,7 +88,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body("Changed Availability");
     }
 
-    @PostMapping("/private/post/delete")
+    @DeleteMapping("/private/post/delete")
     public ResponseEntity<?> deletePost(@RequestBody Map<String, Long> keyVsValueMap) {
         boolean flag = false;
         try {
@@ -104,13 +104,11 @@ public class PostController {
 
     @PostMapping(value = "/private/post/edit", consumes = {"multipart/form-data"})
     public ResponseEntity<?> editPost(EditItemDTO editItemDTO) {
-        Optional<String> re = postValidator.validateEditPost(editItemDTO);
-        if (re.isPresent())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.get());
-
-        boolean res = false;
+        Optional<String> validationErrorMessage = postValidator.validateEditPost(editItemDTO);
+        if (validationErrorMessage.isPresent())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorMessage.get());
         try {
-            res = postService.editPost(editItemDTO);
+            postService.editPost(editItemDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

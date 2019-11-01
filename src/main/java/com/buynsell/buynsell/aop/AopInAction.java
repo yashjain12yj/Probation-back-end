@@ -21,15 +21,17 @@ public class AopInAction {
         LOG.info(joinPoint.getTarget() + "." + joinPoint.getSignature().getName() + " End");
         return retVal;
     }
+
     @Around("execution(* com.buynsell.buynsell.repository..*(..))")
     public Object performance(ProceedingJoinPoint joinPoint) throws Throwable {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Object retVal = joinPoint.proceed();
         stopWatch.stop();
-        LOG.info(joinPoint.getTarget() + "." + joinPoint.getSignature().getName() + " -> executed in " + stopWatch.getTotalTimeSeconds() + "sec");
+        LOG.info(joinPoint.getTarget() + "." + joinPoint.getSignature().getName() + " -> executed in " + stopWatch.getTotalTimeMillis() + "ms");
         return retVal;
     }
+
     @AfterThrowing(pointcut = "execution(* com.buynsell.buynsell.*..*(..))", throwing = "ex")
     public void logError(Exception ex) {
         ex.printStackTrace();

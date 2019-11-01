@@ -37,7 +37,7 @@ public class PostServiceTest {
     }
 
     @Test
-    public void getItem() {
+    public void getItem() throws Exception {
         Mockito.when(postRepository.getItem(expectedItem.getId()).get()).thenReturn(expectedItem);
         Optional<PostDTO> postDTO = postService.getItem(expectedItem.getId());
         assertEquals("Check if expected item is equal to actual item", expectedItem.getId(), postDTO.get().getId());

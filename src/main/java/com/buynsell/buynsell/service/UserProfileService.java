@@ -2,7 +2,6 @@ package com.buynsell.buynsell.service;
 
 import com.buynsell.buynsell.encryption.AESEncryption;
 import com.buynsell.buynsell.encryption.AuthKeys;
-import com.buynsell.buynsell.model.Image;
 import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.ChangePasswordDTO;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserProfileService {
@@ -36,7 +34,8 @@ public class UserProfileService {
         Optional<User> user = userService.findByUsernameOrEmail(userInfo.getEmail());
         if (!user.isPresent()) return -1;
 
-        if(!user.get().getPassword().equals(AESEncryption.encrypt(changePasswordDTO.getOldPassword(), authKeys.getSecretKey()))) return 0;
+        if (!user.get().getPassword().equals(AESEncryption.encrypt(changePasswordDTO.getOldPassword(), authKeys.getSecretKey())))
+            return 0;
         userProfileRepository.changePassword(user.get(), AESEncryption.encrypt(changePasswordDTO.getNewPassword(), authKeys.getSecretKey()));
         return 1;
     }
@@ -45,12 +44,8 @@ public class UserProfileService {
         List<Item> items = userProfileRepository.getDashboard(userInfo.getUsername());
         DashboardDTO dashboardDTO = new DashboardDTO();
         ArrayList<Item> newItems = new ArrayList<>();
-        for(Item item: items){
+        for (Item item : items) {
             item.setUser(null);
-            Set<Image> images;
-            images = item.getImages();
-            for(Image image : images)
-                image.setItem(null);
             newItems.add(item);
         }
         dashboardDTO.setItems(newItems);

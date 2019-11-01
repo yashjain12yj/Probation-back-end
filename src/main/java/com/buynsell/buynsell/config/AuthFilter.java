@@ -7,6 +7,7 @@ import com.buynsell.buynsell.payload.UserInfo;
 import com.buynsell.buynsell.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -26,13 +27,12 @@ public class AuthFilter implements Filter {
     UserService userService;
     @Autowired
     AuthenticationTokenUtil authenticationTokenUtil;
-
     @Autowired
     UserInfo userInfo;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        log.info("Initiating AuthFilter");
+        //log.info("Initiating AuthFilter");
     }
 
     @Override
@@ -41,21 +41,25 @@ public class AuthFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         log.info("Authenticating User from AuthFilter");
-        try{
+        try {
             String token = request.getHeader("token");
-
-            String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
-            Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail);
-            if (!user.isPresent()) {
-                log.info("User not logged in or invalid token");
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
-            } else {
-                log.info("User logged in");
-                userInfo.setEmail(user.get().getEmail());
-                userInfo.setUsername(user.get().getUsername());
-                filterChain.doFilter(request, response);
+            if (!StringUtils.isEmpty(token)) {
+                String usernameOrEmail = authenticationTokenUtil.getUsernameOrEmailFromToken(token, authKeys.getTokenSecretKey());
+                Optional<User> user = userService.findByUsernameOrEmail(usernameOrEmail);
+                if (!user.isPresent()) {
+                    log.info("User not logged in or invalid token");
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not logged in");
+                } else {
+                    log.info("User logged in");
+                    userInfo.setEmail(user.get().getEmail());
+                    userInfo.setUsername(user.get().getUsername());
+                    filterChain.doFilter(request, response);
+                }
+            }else{
+                log.info("No Auth token found");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token not found");
             }
-        } catch (NullPointerException ex){
+        } catch (NullPointerException ex) {
             log.info("No Auth token found");
             ex.printStackTrace();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token not found");

@@ -1,7 +1,5 @@
 package com.buynsell.buynsell.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 
 @Entity
@@ -14,10 +12,6 @@ public class Image {
     @Lob
     private byte[] data;
 
-    @JsonBackReference
-    @ManyToOne
-    private Item item;
-
     public Long getId() {
         return id;
     }
@@ -28,13 +22,5 @@ public class Image {
 
     public void setData(byte[] data) {
         this.data = data;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
     }
 }

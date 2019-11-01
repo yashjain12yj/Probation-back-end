@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -40,14 +41,14 @@ public class SearchController {
         ResponseEntity responseEntity = searchValidator.validateSearchQuery(searchRequestDTO);
         if (responseEntity != null)
             return responseEntity;
-        List items = null;
+        List items = new ArrayList();
         try {
             items = searchService.getSearchResult(searchRequestDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        if (items == null)
+        if (items.isEmpty())
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No content found");
         return ResponseEntity.status(HttpStatus.OK).body(items);
     }

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -43,7 +42,6 @@ public class PostService {
         for (int i = 0; i < createPostDTO.getImages().length; i++) {
             Image image = new Image();
             image.setData(createPostDTO.getImages()[i].getBytes());
-            image.setItem(item);
             item.addImage(image);
         }
         return postRepository.createPost(item);
@@ -96,7 +94,6 @@ public class PostService {
             for (int i = 0; i < editItemDTO.getImages().length; i++) {
                 Image image = new Image();
                 image.setData(editItemDTO.getImages()[i].getBytes());
-                image.setItem(item);
                 item.addImage(image);
             }
         }

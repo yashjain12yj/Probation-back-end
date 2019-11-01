@@ -44,7 +44,7 @@ UserProfileController {
 
     @GetMapping("/dashboard")
     public ResponseEntity<?> getDashboard() {
-        DashboardDTO dashboardDTO = null;
+        DashboardDTO dashboardDTO;
         try {
             dashboardDTO = userProfileService.getDashboard();
         } catch (Exception e) {
