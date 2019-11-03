@@ -9,11 +9,13 @@ import com.buynsell.buynsell.util.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
@@ -33,9 +35,9 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
-        ResponseEntity responseEntity = authValidator.validateSignup(signUpRequest);
-        if (responseEntity != null)
-            return responseEntity;
+        Optional<String> validationErrorMessage = authValidator.validateSignup(signUpRequest);
+        if (validationErrorMessage.isPresent())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorMessage.get());;
         if (userService.existsByUsername(signUpRequest.getUsername()))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken!");
         else if (userService.existsByEmail(signUpRequest.getEmail()))
@@ -52,9 +54,9 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        ResponseEntity responseEntity = authValidator.validateSignin(loginRequest);
-        if (responseEntity != null)
-            return responseEntity;
+        Optional<String> validationErrorMessage = authValidator.validateSignin(loginRequest);
+        if (validationErrorMessage.isPresent())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorMessage.get());
         String token = null;
         try {
             token = userService.checkAuth(loginRequest);
@@ -62,7 +64,7 @@ public class AuthController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        if (token == null || token.equals(""))
+        if (StringUtils.isEmpty(token))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         return ResponseEntity.status(HttpStatus.OK).body(new AuthenticationTokenResponse(token));
     }
