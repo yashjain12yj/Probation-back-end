@@ -33,10 +33,10 @@ public class PostController {
 
     @PostMapping(value = "/private/post/", consumes = {"multipart/form-data"})
     public ResponseEntity<?> createPost(@Valid CreatePostDTO createPostDTO) {
-        Optional<String> re = postValidator.validateCreatePost(createPostDTO);
-        if (re.isPresent())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(re.get());
-        Item item = null;
+        Optional<String> validationErrorMessage = postValidator.validateCreatePost(createPostDTO);
+        if (validationErrorMessage.isPresent())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorMessage.get());
+        Item item;
         try {
             item = postService.createPost(createPostDTO);
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class PostController {
 
     @GetMapping(value = "/post/{itemId}")
     public ResponseEntity<?> getItem(@PathVariable Long itemId) {
-        Optional<PostDTO> postDTO = null;
+        Optional<PostDTO> postDTO;
         try {
             postDTO = postService.getItem(itemId);
         } catch (Exception e) {

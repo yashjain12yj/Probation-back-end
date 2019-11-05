@@ -46,6 +46,12 @@ public class PostValidator {
     }
     public Optional<String> validateImagesForEdit(MultipartFile[] images){
         if (images == null) return Optional.empty();
+        Optional<String> validationMsg = validateImage(images);
+        if (validationMsg.isPresent()) return validationMsg;
+        return Optional.empty();
+    }
+
+    public Optional<String> validateImage(MultipartFile[] images){
         for (MultipartFile image : images){
             if(image.getSize() == 0 || image.isEmpty())
                 return Optional.of(image.getName() + " is not readable");
@@ -57,17 +63,13 @@ public class PostValidator {
         return Optional.empty();
     }
 
+
+
     public Optional<String> validateImages(MultipartFile[] images){
         if (images == null || images.length == 0)
             return Optional.of("Image required");
-        for (MultipartFile image : images){
-            if(image.getSize() == 0 || image.isEmpty())
-                return Optional.of(image.getName() + " is not readable");
-            else if (!image.getContentType().contains("image"))
-                return Optional.of(image.getOriginalFilename() + " is not a image. Image required");
-            else if (image.getSize() > 1000000)
-                return Optional.of(image.getOriginalFilename() + ": Image must be less than 1 MB");
-        }
+        Optional<String> validationMsg = validateImage(images);
+        if (validationMsg.isPresent()) return validationMsg;
         return Optional.empty();
     }
 

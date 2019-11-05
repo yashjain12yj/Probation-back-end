@@ -2,10 +2,10 @@ package com.buynsell.buynsell.util;
 
 import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,47 +13,53 @@ import java.util.regex.Pattern;
 @Component
 public class AuthValidator {
 
-    public ResponseEntity validateSignin(LoginRequest loginRequest) {
-        if (loginRequest.getUsernameOrEmail() == null || loginRequest.getUsernameOrEmail().trim().equals(""))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or Email is required");
-        else if (loginRequest.getPassword() == null || loginRequest.getPassword().trim().equals(""))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password is required");
-        return null;
+    public Optional<String> validateSignin(LoginRequest loginRequest) {
+        if (StringUtils.isEmpty(loginRequest.getUsernameOrEmail()))
+            return Optional.of("Username or Email is required");
+        else if (StringUtils.isEmpty(loginRequest.getPassword()))
+            return Optional.of("Password is required");
+        return Optional.empty();
     }
 
-    public ResponseEntity validateSignup(SignUpRequest signUpRequest) {
-        String name = signUpRequest.getName().trim();
-        if (name == null || name.equals(""))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name is required");
+    public Optional<String> validateName(String name){
+        if (StringUtils.isEmpty(name))
+            return Optional.of("Name is required");
         else if (name.length() < 4 || name.length() > 40)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name must be 4 to 40 character long");
+            return Optional.of("Name must be 4 to 40 character long");
         for (char c : name.toCharArray())
             if (!Character.isLetter(c) && c != ' ')
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name should not contain any digit or special character");
-        String username = signUpRequest.getUsername().trim();
-        if (username == null || username.equals(""))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is required");
-        else if (username.length() < 4 || username.length() > 20)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username must be 4 to 20 characters long");
-        for (char c : username.toCharArray())
+                return Optional.of("Name should not contain any digit or special character");
+        return Optional.empty();
+    }
+
+    public Optional<String> validateUsername(String username){
+        if (StringUtils.isEmpty(username))
+            return Optional.of("Username is required");
+        else if (username.trim().length() < 4 || username.trim().length() > 20)
+            return Optional.of("Username must be 4 to 20 characters long");
+        for (char c : username.trim().toCharArray())
             if (!Character.isLetter(c) && !Character.isDigit(c))
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username should only contain characters and digits");
-        String email = signUpRequest.getEmail();
-        if (email == null || email.trim().equals(""))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email required");
+                return Optional.of("Username should only contain characters and digits");
+        return Optional.empty();
+    }
+    public Optional<String> validateEmail(String email){
+        if (StringUtils.isEmpty(email))
+            return Optional.of("Email required");
         else if (email.trim().length() > 30)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email must be less than 30 characters");
+            return Optional.of("Email must be less than 30 characters");
         Pattern regexPattern = Pattern.compile("^[(a-zA-Z-0-9-\\_\\+\\.)]+@[(a-z-A-z)]+\\.[(a-zA-z)]{2,3}$");
         Matcher regMatcher = regexPattern.matcher(email);
         if (!regMatcher.matches())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Email");
-        String password = signUpRequest.getPassword();
-        if (password == null || password.trim().equals(""))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password required");
+            return Optional.of("Invalid Email");
+        return Optional.empty();
+    }
+    public Optional<String> validatePassword(String password){
+        if (StringUtils.isEmpty(password))
+            return Optional.of("Password required");
         else if (password.trim().length() < 8 || password.trim().length() > 20)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password must be 8 to 20 characters long");
+            return Optional.of("Password must be 8 to 20 characters long");
         boolean hasLower = false, hasUpper = false, hasDigit = false, hasSpecialCHr = false;
-        for (char c : password.toCharArray()) {
+        for (char c : password.trim().toCharArray()) {
             if (Character.isDigit(c))
                 hasDigit = true;
             else if (Character.isLowerCase(c))
@@ -64,10 +70,32 @@ public class AuthValidator {
                 hasSpecialCHr = true;
         }
         if (!(hasDigit && hasLower && hasSpecialCHr && hasUpper))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password much contain one lowercase, one uppercase, one digit and one special character");
-        String confirmPassword = signUpRequest.getConfirmPassword().trim();
+            return Optional.of("Password much contain one lowercase, one uppercase, one digit and one special character");
+        return Optional.empty();
+    }
+
+    public Optional<String> validateConfirmPassword(String password, String confirmPassword){
         if (!password.equals(confirmPassword))
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password and confirm password must be equal");
-        return null;
+            return Optional.of("Password and confirm password must be equal");
+        return Optional.empty();
+    }
+
+    public Optional<String> validateSignup(SignUpRequest signUpRequest) {
+        Optional<String> validationErrorMessage = validateName(signUpRequest.getName());
+        if (validationErrorMessage.isPresent()) return validationErrorMessage;
+
+        validationErrorMessage = validateUsername(signUpRequest.getUsername());
+        if (validationErrorMessage.isPresent()) return validationErrorMessage;
+
+        validationErrorMessage = validateEmail(signUpRequest.getEmail());
+        if (validationErrorMessage.isPresent()) return validationErrorMessage;
+
+        validationErrorMessage = validatePassword(signUpRequest.getPassword());
+        if (validationErrorMessage.isPresent()) return validationErrorMessage;
+
+        validationErrorMessage = validateConfirmPassword(signUpRequest.getPassword(),signUpRequest.getConfirmPassword());
+        if (validationErrorMessage.isPresent()) return validationErrorMessage;
+
+        return Optional.empty();
     }
 }

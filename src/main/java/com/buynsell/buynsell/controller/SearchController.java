@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/search")
@@ -38,9 +39,9 @@ public class SearchController {
 
     @PostMapping("/searchItems")
     public ResponseEntity<?> searchItem(@RequestBody SearchRequestDTO searchRequestDTO) {
-        ResponseEntity responseEntity = searchValidator.validateSearchQuery(searchRequestDTO);
-        if (responseEntity != null)
-            return responseEntity;
+        Optional<String> validationErrorMessage = searchValidator.validateSearchQuery(searchRequestDTO);
+        if (validationErrorMessage.isPresent())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorMessage.get());;
         List items = new ArrayList();
         try {
             items = searchService.getSearchResult(searchRequestDTO);
