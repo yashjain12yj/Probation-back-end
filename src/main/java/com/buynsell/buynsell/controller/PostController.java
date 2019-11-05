@@ -4,7 +4,7 @@ import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.payload.CreatePostDTO;
 import com.buynsell.buynsell.payload.EditItemDTO;
 import com.buynsell.buynsell.payload.PostDTO;
-import com.buynsell.buynsell.payload.UserInfo;
+import com.buynsell.buynsell.model.UserInfo;
 import com.buynsell.buynsell.service.PostService;
 import com.buynsell.buynsell.util.PostValidator;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.buynsell.buynsell.payload;
+package com.buynsell.buynsell.model;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;

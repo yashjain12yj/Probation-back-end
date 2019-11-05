@@ -9,12 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class SearchServiceTest {
 
@@ -33,14 +32,14 @@ public class SearchServiceTest {
     }
 
     @Test
-    public void getRecentItems() {
+    public void getRecentItems() throws Exception {
         Mockito.when(searchRepository.getRecentItems()).thenReturn(expectedItems);
         List actualItems = searchService.getRecentItems();
         assertEquals("Check if actual and expected recent item are same", expectedItems.size(), actualItems.size());
     }
 
     @Test
-    public void getSearchResult() {
+    public void getSearchResult() throws Exception {
         String searchQuery = "car";
         Mockito.when(searchRepository.getSearchResult(searchQuery)).thenReturn(expectedItems);
         SearchRequestDTO searchRequestDTO = new SearchRequestDTO(searchQuery);

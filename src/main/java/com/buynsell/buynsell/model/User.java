@@ -1,7 +1,6 @@
 package com.buynsell.buynsell.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,7 +15,8 @@ import java.util.Set;
 @Table(name = "USERS")
 public class User extends DateAudit {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
+    @SequenceGenerator(name = "user_id_seq", sequenceName = "USER_ID_SEQ", allocationSize = 1)
     private Long id;
 
     @NotBlank
@@ -29,11 +29,10 @@ public class User extends DateAudit {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @NaturalId
     @NotBlank
     @Size(max = 40)
     @Email
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @NotBlank
@@ -45,13 +44,13 @@ public class User extends DateAudit {
     private boolean isActive;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Item> items;
 
     public User() {
     }
 
-    public User(@NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username, @NotBlank @Size(max = 40) @Email String email, @NotBlank @Size(max = 100) String password, @NotNull boolean isActive, Set<Item> items) {
+    public User(String name, String username, String email, String password, boolean isActive, Set<Item> items) {
         this.name = name;
         this.username = username;
         this.email = email;

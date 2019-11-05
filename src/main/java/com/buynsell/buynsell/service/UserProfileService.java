@@ -6,7 +6,7 @@ import com.buynsell.buynsell.model.Item;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.ChangePasswordDTO;
 import com.buynsell.buynsell.payload.DashboardDTO;
-import com.buynsell.buynsell.payload.UserInfo;
+import com.buynsell.buynsell.model.UserInfo;
 import com.buynsell.buynsell.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

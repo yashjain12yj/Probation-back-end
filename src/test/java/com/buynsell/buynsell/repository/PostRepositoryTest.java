@@ -34,7 +34,7 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void getItem() {
+    public void getItem() throws Exception {
         LOG.info("PostRepositoryTest.getItem() Begin");
         Optional<Item> expected = postRepository.getItem(actual.getId());
         assertEquals("Fetching Item by Id",actual.getId(),expected.get().getId());
@@ -42,7 +42,7 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void markSold() {
+    public void markSold() throws Exception {
         LOG.info("PostRepositoryTest.markSold() Begin");
         boolean expected = postRepository.markSold("jainy",actual.getId());
         assertEquals("Check if it changes the availability status when the post is of original user",true, expected);
@@ -52,7 +52,7 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void markAvailable() {
+    public void markAvailable() throws Exception {
         LOG.info("PostRepositoryTest.markAvailable() Begin");
         boolean expected = postRepository.markSold("jainy",actual.getId());
         assertEquals("Check if it changes the availability status when the post is of original user",true, expected);

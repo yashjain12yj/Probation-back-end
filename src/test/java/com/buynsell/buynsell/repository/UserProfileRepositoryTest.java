@@ -1,7 +1,6 @@
 package com.buynsell.buynsell.repository;
 
 import com.buynsell.buynsell.model.User;
-import com.buynsell.buynsell.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +10,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,13 +36,12 @@ public class UserProfileRepositoryTest {
     }
 
     @Test
-    public void changePassword() {
-        int result = userProfileRepository.changePassword(user, "EoE7C06BLZJY8lBnjVWXdQ==");
-        assertEquals("Checking changePassword repository", 1, result);
+    public void changePassword() throws Exception {
+        verify(userProfileRepository, times(1)).changePassword(user, "EoE7C06BLZJY8lBnjVWXdQ==");
     }
 
     @Test
-    public void getDashboard() {
+    public void getDashboard() throws Exception {
         List items = userProfileRepository.getDashboard("jainy");
 
         assertEquals("Checking expected dashboard ", 2, items.size());

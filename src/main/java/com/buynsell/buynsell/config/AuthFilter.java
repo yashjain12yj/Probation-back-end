@@ -3,7 +3,7 @@ package com.buynsell.buynsell.config;
 import com.buynsell.buynsell.encryption.AuthKeys;
 import com.buynsell.buynsell.encryption.AuthenticationTokenUtil;
 import com.buynsell.buynsell.model.User;
-import com.buynsell.buynsell.payload.UserInfo;
+import com.buynsell.buynsell.model.UserInfo;
 import com.buynsell.buynsell.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

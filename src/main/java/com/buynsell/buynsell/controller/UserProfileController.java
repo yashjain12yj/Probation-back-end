@@ -2,7 +2,7 @@ package com.buynsell.buynsell.controller;
 
 import com.buynsell.buynsell.payload.ChangePasswordDTO;
 import com.buynsell.buynsell.payload.DashboardDTO;
-import com.buynsell.buynsell.payload.UserInfo;
+import com.buynsell.buynsell.model.UserInfo;
 import com.buynsell.buynsell.service.UserProfileService;
 import com.buynsell.buynsell.util.UserProfileValidator;
 import org.springframework.beans.factory.annotation.Autowired;

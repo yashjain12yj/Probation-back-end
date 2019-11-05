@@ -4,7 +4,7 @@ import com.buynsell.buynsell.encryption.AESEncryption;
 import com.buynsell.buynsell.encryption.AuthKeys;
 import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.ChangePasswordDTO;
-import com.buynsell.buynsell.payload.UserInfo;
+import com.buynsell.buynsell.model.UserInfo;
 import com.buynsell.buynsell.repository.UserProfileRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,11 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 
 public class UserProfileServiceTest {
 
@@ -41,10 +41,10 @@ public class UserProfileServiceTest {
     }
 
     @Test
-    public void changePassword() {
+    public void changePassword() throws Exception {
         Mockito.when(userService.findByUsernameOrEmail(userInfo.getEmail())).thenReturn(Optional.of(expectedUser));
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("Yash@123", "Yash@321", "Yash@321");
-        Mockito.when(userProfileRepository.changePassword(expectedUser, AESEncryption.encrypt(changePasswordDTO.getNewPassword(), authKeys.getSecretKey()))).thenReturn(1);
+        doNothing().when(userProfileRepository).changePassword(expectedUser, AESEncryption.encrypt(changePasswordDTO.getNewPassword(), authKeys.getSecretKey()));
         int actual = userProfileService.changePassword(changePasswordDTO);
         assertEquals("Check if password changed or not", 1, actual);
     }

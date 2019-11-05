@@ -26,13 +26,13 @@ public class SearchRepositoryTest {
     }
 
     @Test
-    public void getRecentItems() {
+    public void getRecentItems() throws Exception {
         List items = searchRepository.getRecentItems();
         assertEquals("Checking number of recent post written", 2,items.size());
     }
 
     @Test
-    public void getSearchResult() {
+    public void getSearchResult() throws Exception {
         List items = searchRepository.getSearchResult("car");
         assertEquals("Checking number of search result of a query", 2, items.size());
     }

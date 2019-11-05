@@ -7,6 +7,7 @@ import com.buynsell.buynsell.service.UserService;
 import com.buynsell.buynsell.util.AuthValidator;
 import com.buynsell.buynsell.util.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ public class AuthController {
 
     private static final Logger log = Logger.getLogger(AuthController.class.getName());
 
+    @Lazy
     @Autowired
     private UserService userService;
 

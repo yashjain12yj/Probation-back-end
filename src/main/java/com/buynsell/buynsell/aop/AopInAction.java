@@ -1,5 +1,6 @@
 package com.buynsell.buynsell.aop;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
@@ -33,7 +34,7 @@ public class AopInAction {
     }
 
     @AfterThrowing(pointcut = "execution(* com.buynsell.buynsell.*..*(..))", throwing = "ex")
-    public void logError(Exception ex) {
-        ex.printStackTrace();
+    public void logException(JoinPoint joinPoint, Exception ex) {
+        LOG.warning("***Exception occurred in " + joinPoint.getSignature().toShortString() + " -> " + ex);
     }
 }

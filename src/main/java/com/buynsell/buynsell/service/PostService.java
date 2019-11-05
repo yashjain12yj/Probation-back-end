@@ -6,7 +6,7 @@ import com.buynsell.buynsell.model.User;
 import com.buynsell.buynsell.payload.CreatePostDTO;
 import com.buynsell.buynsell.payload.EditItemDTO;
 import com.buynsell.buynsell.payload.PostDTO;
-import com.buynsell.buynsell.payload.UserInfo;
+import com.buynsell.buynsell.model.UserInfo;
 import com.buynsell.buynsell.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class PostService {
     private UserInfo userInfo;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Transactional
     public Item createPost(CreatePostDTO createPostDTO) throws Exception {
