@@ -5,30 +5,26 @@ plugins {
 }
 
 
-
-
-
-def String versionBuildNumber() {
-    def versionPropsFile = file('version.properties')
+String versionBuildNumber() {
+    def versionPropsFile = file('gradle.properties')
     def versionBuild
     if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
+        //has key value pairs of properties
+        Properties versionProps = new Properties()
         versionProps.load(new FileInputStream(versionPropsFile))
-        versionBuild = versionProps['VERSION_BUILD'].toInteger()
-    } else {
-        throw new FileNotFoundException("Could not read version.properties!")
-    }
+        versionBuild = versionProps['VERSION_BUILD']
+    } else
+        throw new FileNotFoundException("Could not read gradle.properties!")
 
     if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
+        Properties versionProps = new Properties()
         versionProps.load(new FileInputStream(versionPropsFile))
         versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
         versionProps['VERSION_BUILD'] = versionBuild.toString()
         versionProps.store(versionPropsFile.newWriter(), null)
-    } else {
-        throw new FileNotFoundException("Could not read version.properties!")
-    }
-    return versionBuild.toString();
+    } else
+        throw new FileNotFoundException("Could not read gradle.properties!")
+    return versionBuild.toString()
 }
 
 
@@ -53,4 +49,5 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testCompile('org.apache.httpcomponents:httpclient') // test was not getting response for 401 UNAUTHORIZED status
 }

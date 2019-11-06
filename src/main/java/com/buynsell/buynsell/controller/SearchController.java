@@ -38,7 +38,7 @@ public class SearchController {
     }
 
     @PostMapping("/searchItems")
-    public ResponseEntity<?> searchItem(@RequestBody SearchRequestDTO searchRequestDTO) {
+    public ResponseEntity<?> searchItems(@RequestBody SearchRequestDTO searchRequestDTO) {
         Optional<String> validationErrorMessage = searchValidator.validateSearchQuery(searchRequestDTO);
         if (validationErrorMessage.isPresent())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorMessage.get());;
