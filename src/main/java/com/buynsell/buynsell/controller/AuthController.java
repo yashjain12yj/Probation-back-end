@@ -25,7 +25,6 @@ public class AuthController {
 
     private static final Logger log = Logger.getLogger(AuthController.class.getName());
 
-    @Lazy
     @Autowired
     private UserService userService;
 
@@ -39,7 +38,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
         Optional<String> validationErrorMessage = authValidator.validateSignup(signUpRequest);
         if (validationErrorMessage.isPresent())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorMessage.get());;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorMessage.get());
         if (userService.existsByUsername(signUpRequest.getUsername()))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken!");
         else if (userService.existsByEmail(signUpRequest.getEmail()))
@@ -50,7 +49,7 @@ public class AuthController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
-//        emailUtil.sendMail(signUpRequest.getEmail().trim(), "Buynsell - Successfully Registered", "Thank you for registering to Buynsell");
+        // emailUtil.sendMail(signUpRequest.getEmail().trim(), "Buynsell - Successfully Registered", "Thank you for registering to Buynsell");
         return ResponseEntity.status(HttpStatus.OK).body("Successfully Registered");
     }
 
@@ -59,7 +58,7 @@ public class AuthController {
         Optional<String> validationErrorMessage = authValidator.validateSignin(loginRequest);
         if (validationErrorMessage.isPresent())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrorMessage.get());
-        String token = null;
+        String token;
         try {
             token = userService.checkAuth(loginRequest);
         } catch (Exception e) {
