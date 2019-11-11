@@ -1,10 +1,10 @@
 package com.buynsell.buynsell.controller;
 
 import com.buynsell.buynsell.model.Item;
+import com.buynsell.buynsell.model.UserInfo;
 import com.buynsell.buynsell.payload.CreatePostDTO;
 import com.buynsell.buynsell.payload.EditItemDTO;
 import com.buynsell.buynsell.payload.PostDTO;
-import com.buynsell.buynsell.model.UserInfo;
 import com.buynsell.buynsell.service.PostService;
 import com.buynsell.buynsell.util.PostValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @RestController
 public class PostController {
-
-    private static final Logger log = Logger.getLogger(PostController.class.getName());
 
     @Autowired
     private PostService postService;

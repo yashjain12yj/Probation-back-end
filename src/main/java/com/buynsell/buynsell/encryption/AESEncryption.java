@@ -1,14 +1,9 @@
 package com.buynsell.buynsell.encryption;
 
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidKeyException;
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 
@@ -48,27 +43,5 @@ public class AESEncryption {
         byte[] decValue = new byte[0];
         decValue = c.doFinal(decordedValue);
         return new String(decValue);
-    }
-
-    /* Just for testing purpose */
-    public static void main(String[] args) {
-
-        String key = "1234567891234567";
-        String text = "password";
-
-        System.out.println("Plain test: " + text);
-
-        String encryptedText = null;
-        try {
-            encryptedText = encrypt(text, key);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("Encrypted text: " + encryptedText);
-        try {
-            System.out.println("Decrypted text: " + decrypt(encryptedText, key));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

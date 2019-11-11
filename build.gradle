@@ -1,7 +1,7 @@
 plugins {
+    id 'java'
     id 'org.springframework.boot' version '2.1.8.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-    id 'java'
 }
 
 
@@ -28,26 +28,18 @@ String versionBuildNumber() {
 }
 
 
-group = 'com.buynsell'
+group = 'com.optymyze.buynsell'
 version = '0.0.' + versionBuildNumber() + '-SNAPSHOT'
 sourceCompatibility = '1.8'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-//    compile files('src/main/resources/ojdbc6.jar')
-    compile files('src/main/resources/mysql-connector-java-8.0.17.jar')
+    compile files('src/main/resources/ojdbc6.jar')
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testCompile('org.apache.httpcomponents:httpclient') // test was not getting response for 401 UNAUTHORIZED status
+    testCompile('org.apache.httpcomponents:httpclient') // tests were not getting response for 401 UNAUTHORIZED status
 }

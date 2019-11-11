@@ -31,12 +31,7 @@ public class AuthFilter implements Filter {
     UserInfo userInfo;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        //log.info("Initiating AuthFilter");
-    }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
@@ -67,10 +62,5 @@ public class AuthFilter implements Filter {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

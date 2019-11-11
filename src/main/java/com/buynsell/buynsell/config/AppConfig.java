@@ -14,7 +14,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private AuthFilter authFilter;
 
-    @Bean // A ServletContextInitializer to register Filters in a Servlet 3.0+ container
+    @Bean
     public FilterRegistrationBean<AuthFilter> filterRegistrationBean() {
         FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(authFilter);

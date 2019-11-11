@@ -5,9 +5,7 @@ import com.buynsell.buynsell.payload.LoginRequest;
 import com.buynsell.buynsell.payload.SignUpRequest;
 import com.buynsell.buynsell.service.UserService;
 import com.buynsell.buynsell.util.AuthValidator;
-import com.buynsell.buynsell.util.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -17,13 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
-    private static final Logger log = Logger.getLogger(AuthController.class.getName());
 
     @Autowired
     private UserService userService;
@@ -31,8 +26,6 @@ public class AuthController {
     @Autowired
     private AuthValidator authValidator;
 
-    @Autowired
-    EmailUtil emailUtil;
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
@@ -49,7 +42,6 @@ public class AuthController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
-        // emailUtil.sendMail(signUpRequest.getEmail().trim(), "Buynsell - Successfully Registered", "Thank you for registering to Buynsell");
         return ResponseEntity.status(HttpStatus.OK).body("Successfully Registered");
     }
 

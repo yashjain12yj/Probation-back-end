@@ -7,70 +7,74 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Component
 public class PostValidator {
 
-    public Optional<String> validateTitle(String title){
-        if (title == null || title.trim().length() == 0)
-            return Optional.of("Title required");
-        else if (title.trim().length() < 5 || title.trim().length() > 50)
-            return Optional.of("Title length must be 5 to 50 characters long");
-        return Optional.empty();
+    public Optional<String> validateTitle(String value) {
+        Optional<String> errorMsg = validateLabel("Title", value, 5, 50);
+        return errorMsg.isPresent() ? errorMsg : empty();
     }
 
-    public Optional<String> validateDescription(String description){
-        if (description == null || description.trim().length() == 0)
-            return Optional.of("Description required");
-        else if (description.trim().length() < 15 || description.trim().length() > 3000)
-            return Optional.of("Description must be 15 to 3000 characters long");
-        return Optional.empty();
+    public Optional<String> validateDescription(String value) {
+        Optional<String> errorMsg = validateLabel("Description", value, 15, 3000);
+        return errorMsg.isPresent() ? errorMsg : empty();
     }
 
-    public Optional<String> validateCategory(String category){
-        if (category == null || category.trim().equals(""))
-            return Optional.of("Category required");
-        return Optional.empty();
+    public Optional<String> validateCategory(String value) {
+        return isEmpty(value) ? of("Category required") : empty();
     }
 
-    public Optional<String> validatePrice(String price){
+    private static Optional<String> validateLabel(String label, String value, int minLength, int maxLength) {
+        if (isEmpty(value))
+            return of(label + "  required");
+        else if (value.trim().length() < minLength || value.trim().length() > maxLength)
+            return of(label + " length must be " + minLength + " to " + maxLength + " characters long");
+        return empty();
+    }
+
+    public Optional<String> validatePrice(String price) {
         if (price == null || price.trim().length() == 0)
-            return Optional.of("Price required");
+            return of("Price required");
         try {
             double dPrice = Double.parseDouble(price);
             if (dPrice < 0 || dPrice > 100000000)
-                return Optional.of("Price must be in limit");
+                return of("Price must be in limit");
         } catch (NumberFormatException ex) {
-            return Optional.of("Price must be a number");
+            return of("Price must be a number");
         }
-        return Optional.empty();
-    }
-    public Optional<String> validateImagesForEdit(MultipartFile[] images){
-        if (images == null) return Optional.empty();
-        Optional<String> validationMsg = validateImage(images);
-        if (validationMsg.isPresent()) return validationMsg;
-        return Optional.empty();
+        return empty();
     }
 
-    public Optional<String> validateImage(MultipartFile[] images){
-        for (MultipartFile image : images){
-            if(image.getSize() == 0 || image.isEmpty())
-                return Optional.of(image.getName() + " is not readable");
+    public Optional<String> validateImagesForEdit(MultipartFile[] images) {
+        if (images == null) return empty();
+        Optional<String> validationMsg = validateImage(images);
+        if (validationMsg.isPresent()) return validationMsg;
+        return empty();
+    }
+
+    public Optional<String> validateImage(MultipartFile[] images) {
+        for (MultipartFile image : images) {
+            if (image.getSize() == 0 || image.isEmpty())
+                return of(image.getName() + " is not readable");
             else if (!image.getContentType().contains("image"))
-                return Optional.of(image.getOriginalFilename() + " is not a image. Image required");
+                return of(image.getOriginalFilename() + " is not a image. Image required");
             else if (image.getSize() > 1000000)
-                return Optional.of(image.getOriginalFilename() + ": Image must be less than 1 MB");
+                return of(image.getOriginalFilename() + ": Image must be less than 1 MB");
         }
-        return Optional.empty();
+        return empty();
     }
 
 
-
-    public Optional<String> validateImages(MultipartFile[] images){
+    public Optional<String> validateImages(MultipartFile[] images) {
         if (images == null || images.length == 0)
-            return Optional.of("Image required");
+            return of("Image required");
         Optional<String> validationMsg = validateImage(images);
         if (validationMsg.isPresent()) return validationMsg;
-        return Optional.empty();
+        return empty();
     }
 
     public Optional<String> validateCreatePost(CreatePostDTO createPostDTO) {
@@ -89,10 +93,10 @@ public class PostValidator {
         re = validateImages(createPostDTO.getImages());
         if (re.isPresent()) return re;
 
-        return Optional.empty();
+        return empty();
     }
 
-    public Optional<String> validateEditPost(EditItemDTO editItemDTO){
+    public Optional<String> validateEditPost(EditItemDTO editItemDTO) {
         Optional<String> re = validateTitle(editItemDTO.getTitle());
         if (re.isPresent()) return re;
 
@@ -108,6 +112,6 @@ public class PostValidator {
         re = validateImagesForEdit(editItemDTO.getImages());
         if (re.isPresent()) return re;
 
-        return Optional.empty();
+        return empty();
     }
 }
